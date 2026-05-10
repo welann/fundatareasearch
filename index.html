@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fun Data Research｜数据分析索引</title>
+<style>
+:root {
+  --bg:#f4f0e8;
+  --paper:#fffaf0;
+  --ink:#161411;
+  --muted:#6b6258;
+  --line:#25211b;
+  --thin:#d5caba;
+  --accent:#8d1e13;
+  --accent2:#1d4b43;
+  --soft:#ebe3d5;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 14% 4%, rgba(141,30,19,.09), transparent 28%),
+    radial-gradient(circle at 88% 10%, rgba(29,75,67,.08), transparent 27%),
+    linear-gradient(180deg, rgba(255,250,240,.18), rgba(244,240,232,0) 42%),
+    var(--bg);
+  font-family: ui-serif, "Noto Serif SC", "Songti SC", "STSong", Georgia, serif;
+  line-height:1.64;
+}
+a { color:inherit; }
+.site-shell { min-height:100vh; }
+.topbar {
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:14px clamp(18px,5vw,72px);
+  border-bottom:1px solid var(--thin);
+  background:rgba(244,240,232,.92);
+  backdrop-filter:blur(10px);
+  font-family:ui-sans-serif, system-ui, -apple-system, "Noto Sans SC", sans-serif;
+}
+.brand { display:flex; align-items:center; gap:10px; font-weight:900; }
+.brand-mark {
+  width:24px;
+  height:24px;
+  border:2px solid var(--line);
+  background:
+    linear-gradient(90deg, transparent 7px, var(--line) 7px 9px, transparent 9px),
+    linear-gradient(0deg, transparent 7px, var(--line) 7px 9px, transparent 9px),
+    var(--paper);
+}
+.topbar nav { display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+.topbar a {
+  text-decoration:none;
+  border:1px solid var(--line);
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:13px;
+  background:rgba(255,250,240,.5);
+}
+main { padding:0 clamp(18px,5vw,72px); }
+section { padding:34px 0; border-bottom:1px solid var(--thin); }
+.section-head {
+  display:grid;
+  grid-template-columns:.7fr 1.3fr;
+  gap:28px;
+  margin-bottom:22px;
+}
+.eyebrow {
+  font-family:ui-sans-serif, system-ui, -apple-system, "Noto Sans SC", sans-serif;
+  color:var(--accent);
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-weight:800;
+}
+h2 {
+  margin:4px 0 0;
+  font-size:clamp(30px,4vw,56px);
+  line-height:1.02;
+  letter-spacing:0;
+}
+.lead { margin:0; max-width:840px; font-size:20px; color:#2d2822; }
+.report-grid {
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:16px;
+}
+.report-card {
+  grid-column:span 9;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 220px;
+  gap:0;
+  border:2px solid var(--line);
+  background:var(--paper);
+  text-decoration:none;
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.report-card:hover {
+  transform:translateY(-3px);
+  box-shadow:8px 8px 0 rgba(37,33,27,.18);
+  background:#fffdf6;
+}
+.report-main { padding:22px; }
+.report-meta {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+  font-family:ui-sans-serif, system-ui, -apple-system, "Noto Sans SC", sans-serif;
+}
+.tag {
+  display:inline-flex;
+  align-items:center;
+  border:1px solid var(--line);
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:12px;
+  color:var(--ink);
+  background:var(--soft);
+}
+.tag.dark { background:var(--ink); color:var(--paper); }
+.report-card h3 {
+  margin:0 0 12px;
+  font-size:clamp(26px,3vw,42px);
+  line-height:1.08;
+  letter-spacing:0;
+}
+.report-card p { margin:0; color:#332d26; font-size:17px; }
+.report-side {
+  border-left:1px solid var(--line);
+  display:grid;
+  grid-template-rows:1fr auto;
+  min-height:260px;
+}
+.mini-bars {
+  display:flex;
+  align-items:end;
+  gap:7px;
+  padding:18px;
+}
+.mini-bars span {
+  flex:1;
+  border:1px solid var(--line);
+  background:rgba(141,30,19,.12);
+}
+.report-cta {
+  border-top:1px solid var(--line);
+  padding:14px 16px;
+  font-family:ui-sans-serif, system-ui, -apple-system, "Noto Sans SC", sans-serif;
+  font-weight:900;
+}
+@media (max-width:980px) {
+  .section-head { grid-template-columns:1fr; }
+  .report-card { grid-column:span 12; }
+  .report-card { grid-template-columns:1fr; }
+  .report-side { border-left:0; border-top:1px solid var(--line); min-height:160px; }
+}
+@media (max-width:640px) {
+  .topbar { align-items:flex-start; flex-direction:column; }
+  section { padding-top:24px; }
+}
+</style>
+</head>
+<body>
+<div class="site-shell">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Fun Data Research</span></div>
+    <nav aria-label="页面导航">
+      <a href="#reports">报告入口</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="reports">
+      <div class="section-head">
+        <div><div class="eyebrow">Reports</div><h2>报告入口</h2></div>
+      </div>
+      <div class="report-grid">
+        <a class="report-card" href="./mmk_sz.html">
+          <div class="report-main">
+            <div class="report-meta">
+              <span class="tag dark">已发布</span>
+              <span class="tag">Telegram 数据</span>
+              <span class="tag">10% 随机样本</span>
+              <span class="tag">可搜索报告</span>
+            </div>
+            <h3>一批评价文本里的亲密消费语法</h3>
+            <p>基于 Telegram 频道导出数据整理的社科田野报告：包含全量硬数据、10% 随机样本、评价语显微镜、匿名化摘抄库和可搜索样本卡片。</p>
+          </div>
+          <div class="report-side">
+            <div class="mini-bars" aria-hidden="true">
+              <span style="height:42%"></span><span style="height:78%"></span><span style="height:63%"></span><span style="height:92%"></span><span style="height:55%"></span>
+            </div>
+            <div class="report-cta">进入报告</div>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>
