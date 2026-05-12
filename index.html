@@ -93,9 +93,9 @@ h2 {
   gap:16px;
 }
 .report-card {
-  grid-column:span 9;
+  grid-column:span 6;
   display:grid;
-  grid-template-columns:minmax(0,1fr) 220px;
+  grid-template-columns:minmax(0,1fr);
   gap:0;
   border:2px solid var(--line);
   background:var(--paper);
@@ -134,10 +134,10 @@ h2 {
 }
 .report-card p { margin:0; color:#332d26; font-size:17px; }
 .report-side {
-  border-left:1px solid var(--line);
+  border-top:1px solid var(--line);
   display:grid;
   grid-template-rows:1fr auto;
-  min-height:260px;
+  min-height:148px;
 }
 .mini-bars {
   display:flex;
@@ -159,8 +159,7 @@ h2 {
 @media (max-width:980px) {
   .section-head { grid-template-columns:1fr; }
   .report-card { grid-column:span 12; }
-  .report-card { grid-template-columns:1fr; }
-  .report-side { border-left:0; border-top:1px solid var(--line); min-height:160px; }
+  .report-side { min-height:142px; }
 }
 @media (max-width:640px) {
   .topbar { align-items:flex-start; flex-direction:column; }
@@ -183,7 +182,7 @@ h2 {
         <div><div class="eyebrow">Reports</div><h2>报告入口</h2></div>
       </div>
       <div class="report-grid">
-        <a class="report-card" href="./mmk_sz.html">
+        <a class="report-card" href="./research/mmk_sz.html">
           <div class="report-main">
             <div class="report-meta">
               <span class="tag dark">已发布</span>
@@ -197,6 +196,25 @@ h2 {
           <div class="report-side">
             <div class="mini-bars" aria-hidden="true">
               <span style="height:42%"></span><span style="height:78%"></span><span style="height:63%"></span><span style="height:92%"></span><span style="height:55%"></span>
+            </div>
+            <div class="report-cta">进入报告</div>
+          </div>
+        </a>
+
+        <a class="report-card" href="./research/hanbalongwang_summary.html">
+          <div class="report-main">
+            <div class="report-meta">
+              <span class="tag dark">已发布</span>
+              <span class="tag">深度阅读</span>
+              <span class="tag">小节化</span>
+              <span class="tag">可搜索报告</span>
+            </div>
+            <h3>《憨巴龙王》小节化深度阅读</h3>
+            <p>把原始 PDF 按语义小节重构，提供原页截图、内容整理、归纳总结、策略抽象、延展分析、风险提示和可搜索小节索引。</p>
+          </div>
+          <div class="report-side">
+            <div class="mini-bars" aria-hidden="true">
+              <span style="height:70%"></span><span style="height:52%"></span><span style="height:88%"></span><span style="height:64%"></span><span style="height:76%"></span>
             </div>
             <div class="report-cta">进入报告</div>
           </div>
