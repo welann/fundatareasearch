@@ -1,3 +1,8 @@
 .alma-snapshots
 .DS_Store
-ChatExport_2026-05-10/
+ChatExport_2026-06-21/
+
+.playwright-mcp/
+telegram_three_year_analysis/**.json
+*.md
+*.py
