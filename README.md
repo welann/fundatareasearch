@@ -5,6 +5,8 @@
 - `index.html`：汇总主页面，负责展示报告入口。
 - `research/mmk_sz.html`：Telegram 数据社科田野报告。
 - `research/hanbalongwang_summary.html`：《憨巴龙王》小节化深度阅读报告。
+- `telegram_three_year_analysis/index.html`：研究生三年频道记录回看。
+- `telegram_trading_analysis/index.html`：交易标签、本人投资观点与时间线分析。
 
 所有页面都尽量保持单文件交付，不依赖后端服务，适合本地打开、静态托管和长期归档。
 
@@ -39,6 +41,33 @@
 - 主题索引：把跨页内容合并为可阅读的语义单元。
 - 风险提示：区分可复用的决策框架和不可复制的营销、情绪或极端风险叙事。
 
+### 研究生三年记录回看
+
+`telegram_three_year_analysis/index.html` 汇总 2023 至 2026 年的频道记录，按主题、标签、情绪、投资经历和人生事件回看研究生阶段的变化。
+
+报告主要包含：
+
+- 主题与标签变化：观察不同时期的注意力分布。
+- 情绪月度复盘：汇总可回查的情绪记录。
+- 投资经历：展示与投资相关的记录，但不替代单独的投资观点分析。
+- 人生事件时间线：按时间串联学习、生活和工作节点。
+
+### Telegram 交易观点分析
+
+`telegram_trading_analysis/index.html` 从交易相关标签、`#想法`、回复上下文和高置信交易记录中提取投资观点，并将“保存过的材料”与“本人明确表达的观点”分开处理。
+
+当前口径下，报告保留 23 个交易标签、507 条标签命中和 327 条本人观点；103 条有正文的交易类 `#想法` 均进入观点时间线。
+
+报告主要包含：
+
+- 材料与观点分层：纯链接、待看记录、内容质量评价、转发和摘录不参与观点结论。
+- 主题与月份分布：只使用本人观点统计风险、套利、期权、量化、市场与退出等主题。
+- 六个阶段：从基础问题、数据试验，发展到市场结构、实战复盘和风险框架。
+- 转折点：用原始消息连接观点变化。
+- 时间线：可切换本人观点、`#想法`、标签材料库和全部相关记录。
+
+目录中的 `analysis.json` 是可审计的结构化结果，`build_report.py` 和 `template.html` 用于从 Telegram 导出文件重新生成页面。
+
 ## 本地查看
 
 直接打开首页：
@@ -52,13 +81,15 @@ open index.html
 ```bash
 open "research/mmk_sz.html"
 open "research/hanbalongwang_summary.html"
+open "telegram_three_year_analysis/index.html"
+open "telegram_trading_analysis/index.html"
 ```
 
 ## 新增分析页面
 
 后续新增静态报告时，建议遵循这个流程：
 
-1. 将新的单文件 HTML 放到 `research/` 目录，文件名尽量使用英文、数字和连字符，例如 `some-topic-report.html`。
+1. 简单的单文件报告放到 `research/`；包含生成脚本、结构化数据或其他配套文件的报告使用独立目录，并以 `index.html` 作为入口。
 2. 在 `index.html` 的 `#reports` 区域复制一张 `.report-card`，修改标题、标签、摘要和 `href`。
 3. 如果报告还没有完成，可以先使用 `.queue-card` 作为预留入口。
 4. 保持每个分页面独立可访问，避免依赖本地数据文件或后端接口。

@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>维兰的存储间：研究生三年记录回看</title>
+  <title>研究生三年回看｜维兰的存储间</title>
   <meta name="description" content="基于三年 Telegram 记录的主题、情绪、投资、人生事件与自我叙事分析。">
   <link rel="canonical" href="https://fundata.vercel.app/telegram_three_year_analysis/index.html">
-  <meta property="og:title" content="维兰的存储间：研究生三年记录回看">
+  <meta property="og:title" content="研究生三年回看｜维兰的存储间">
   <meta property="og:description" content="基于三年 Telegram 记录的主题、情绪、投资、人生事件与自我叙事分析。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://fundata.vercel.app/telegram_three_year_analysis/index.html">
   <meta property="og:site_name" content="Fun Data Research">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="维兰的存储间：研究生三年记录回看">
+  <meta name="twitter:title" content="研究生三年回看｜维兰的存储间">
   <meta name="twitter:description" content="基于三年 Telegram 记录的主题、情绪、投资、人生事件与自我叙事分析。">
   <style>
     :root {
@@ -25,7 +25,7 @@
       --green: #0a9f73;
       --gold: #cf8a00;
       --red: #d4514c;
-      --shadow: 0 18px 60px rgba(24, 32, 38, .08);
+      --shadow: 0 2px 8px rgba(24, 32, 38, .08);
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -33,8 +33,8 @@
       margin: 0;
       color: var(--ink);
       background:
-        linear-gradient(90deg, rgba(47,111,159,.06) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(47,111,159,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(47,111,159,.035) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(47,111,159,.025) 1px, transparent 1px),
         var(--paper);
       background-size: 32px 32px;
       font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
@@ -152,12 +152,12 @@
       transform: translateY(0);
     }
     .hero {
-      min-height: 92vh;
+      min-height: min(720px, 82vh);
       display: grid;
       grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr);
       gap: 42px;
       align-items: center;
-      padding: 42px 0 24px;
+      padding: 64px 0 48px;
     }
     .eyebrow {
       display: inline-flex;
@@ -172,8 +172,8 @@
     h1 {
       margin: 20px 0 18px;
       font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif;
-      font-size: clamp(42px, 8vw, 92px);
-      line-height: .98;
+      font-size: clamp(42px, 5.4vw, 72px);
+      line-height: 1.04;
       font-weight: 900;
       letter-spacing: 0;
       max-width: 900px;
@@ -185,26 +185,29 @@
     }
     .hero-copy strong { color: var(--ink); }
     .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0 18px;
+      max-width: 680px;
+      margin-top: 30px;
+      padding: 9px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }
     .hero-actions a {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.72);
-      padding: 10px 14px;
-      border-radius: 6px;
+      padding: 7px 0;
       text-decoration: none;
-      font-size: 14px;
-      box-shadow: 0 8px 28px rgba(24, 32, 38, .04);
+      color: #40505b;
+      font-size: 13px;
+      transition: color .16s ease;
     }
+    .hero-actions a:hover { color: var(--blue); }
     .ledger {
-      background: rgba(255,255,255,.78);
+      background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
-      box-shadow: var(--shadow);
-      padding: 22px;
+      box-shadow: none;
+      padding: 0;
       position: relative;
       overflow: hidden;
     }
@@ -213,22 +216,24 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: linear-gradient(135deg, rgba(47,111,159,.16), transparent 35%, rgba(207,138,0,.14));
-      mix-blend-mode: multiply;
+      display: none;
     }
     .ledger > * { position: relative; }
     .stat-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 12px;
+      gap: 0;
     }
     .stat {
-      border: 1px solid rgba(24,32,38,.12);
-      border-radius: 6px;
-      padding: 14px;
-      background: rgba(255,255,255,.76);
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      padding: 16px;
+      background: transparent;
       min-height: 100px;
     }
+    .stat:nth-child(odd) { border-right: 1px solid var(--line); }
+    .stat:nth-last-child(-n+2) { border-bottom: 0; }
     .stat b {
       display: block;
       font: 800 32px/1.1 "SFMono-Regular", ui-monospace, monospace;
@@ -236,7 +241,9 @@
     }
     .stat span { color: var(--muted); font-size: 13px; }
     .source-note {
-      margin: 16px 0 0;
+      margin: 0;
+      padding: 14px 16px;
+      border-top: 1px solid var(--line);
       color: var(--muted);
       font-size: 13px;
     }
@@ -258,27 +265,25 @@
     .section-head p { margin: 0; color: #40505b; max-width: 720px; }
     .insights {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-      overflow-x: visible;
-      padding-bottom: 4px;
+      grid-template-columns: 1fr;
+      gap: 0;
+      border-top: 1px solid var(--line);
     }
     .insight-card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-top: 4px solid var(--blue);
-      border-radius: 8px;
-      padding: 18px;
-      min-height: 260px;
+      display: grid;
+      grid-template-columns: minmax(220px, .34fr) minmax(0, .66fr);
+      gap: 22px;
+      align-items: start;
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      padding: 18px 0;
+      min-height: 0;
     }
-    .insight-card:nth-child(2) { border-top-color: #6d55b8; }
-    .insight-card:nth-child(3) { border-top-color: var(--red); }
-    .insight-card:nth-child(4) { border-top-color: var(--green); }
-    .insight-card:nth-child(5) { border-top-color: #1b998b; }
-    .insight-card h3 { margin: 0 0 12px; font-size: 17px; line-height: 1.35; }
+    .insight-card h3 { margin: 0; font-size: 17px; line-height: 1.35; }
     .insight-card p { margin: 0; color: #43515b; font-size: 14px; }
     .insight-card h3,
-    .review-insight h3,
     .emotion-insight-card h3,
     .investment-insight-card h3,
     .category-card h3,
@@ -300,7 +305,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 15px;
-      box-shadow: 0 10px 38px rgba(24,32,38,.05);
+      box-shadow: none;
     }
     .review-stat b {
       display: block;
@@ -309,22 +314,6 @@
       overflow-wrap: anywhere;
     }
     .review-stat span { display: block; color: var(--muted); font-size: 12px; margin-top: 8px; }
-    .review-insight-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
-      gap: 12px;
-      overflow-x: visible;
-      padding-bottom: 4px;
-    }
-    .review-insight {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255,255,255,.82);
-      padding: 16px;
-      min-height: 210px;
-    }
-    .review-insight h3 { margin: 0 0 10px; font-size: 16px; line-height: 1.35; }
-    .review-insight p { margin: 0; color: #43515b; font-size: 13px; }
     .review-overview-grid {
       display: grid;
       grid-template-columns: minmax(0,1.45fr) minmax(300px,.55fr);
@@ -335,7 +324,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 18px;
-      box-shadow: 0 10px 38px rgba(24,32,38,.05);
+      box-shadow: none;
       min-width: 0;
       max-width: 100%;
     }
@@ -650,17 +639,17 @@
     }
     .long-purpose-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      overflow-x: visible;
-      padding-bottom: 4px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 32px;
+      border-top: 1px solid var(--line);
     }
     .long-purpose-card {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255,255,255,.82);
-      padding: 15px;
-      min-height: 168px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      padding: 16px 0;
+      min-height: 0;
       min-width: 0;
     }
     .long-purpose-card strong {
@@ -679,7 +668,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 18px;
-      box-shadow: 0 10px 38px rgba(24,32,38,.05);
+      box-shadow: none;
       overflow: hidden;
     }
     .long-event-timeline {
@@ -1003,7 +992,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 24px;
-      box-shadow: 0 10px 38px rgba(24,32,38,.05);
+      box-shadow: none;
     }
     .deep-head {
       display: flex;
@@ -1047,9 +1036,11 @@
     .deep-thesis {
       margin: 16px 0;
       padding: 12px 14px;
-      border-left: 4px solid var(--blue);
-      background: #fbfcfa;
-      border-radius: 0 6px 6px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      border-color: var(--line) !important;
+      background: transparent;
+      border-radius: 0;
     }
     .deep-thesis p { margin: 0; font-weight: 700; color: #26343f; }
     .deep-layout {
@@ -1216,30 +1207,32 @@
     }
     .emotion-insights {
       display: grid;
-      grid-template-columns: repeat(5, minmax(210px, 1fr));
-      gap: 12px;
-      overflow-x: auto;
-      padding-bottom: 4px;
+      grid-template-columns: 1fr;
+      gap: 0;
+      border-top: 1px solid var(--line);
     }
     .emotion-insight-card, .emotion-summary-grid article,
     .emotion-month-panel, .emotion-dimension-panel, .emotion-month-heat-panel, .emotion-phase-panel, .emotion-heat-panel, .emotion-evidence-panel {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
-      box-shadow: 0 10px 38px rgba(24,32,38,.05);
+      box-shadow: none;
       min-width: 0;
     }
     .emotion-insight-card {
-      padding: 16px;
-      border-top: 4px solid #b84a62;
-      min-height: 230px;
+      display: grid;
+      grid-template-columns: minmax(220px, .34fr) minmax(0, .66fr);
+      gap: 22px;
+      align-items: start;
+      padding: 18px 0;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      min-height: 0;
     }
-    .emotion-insight-card:nth-child(2) { border-top-color: #8b6f47; }
-    .emotion-insight-card:nth-child(3) { border-top-color: #cf8a00; }
-    .emotion-insight-card:nth-child(4) { border-top-color: #1b998b; }
-    .emotion-insight-card:nth-child(5) { border-top-color: #2f6f9f; }
     .emotion-insight-card h3 {
-      margin: 0 0 10px;
+      margin: 0;
       font-size: 16px;
       line-height: 1.35;
     }
@@ -1682,10 +1675,9 @@
     }
     .investment-insights {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      overflow-x: visible;
-      padding-bottom: 4px;
+      grid-template-columns: 1fr;
+      gap: 0;
+      border-top: 1px solid var(--line);
     }
     .investment-insight-card, .investment-summary-grid article,
     .investment-month-panel, .investment-dimension-panel, .investment-phase-panel,
@@ -1693,19 +1685,23 @@
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
-      box-shadow: 0 10px 38px rgba(24,32,38,.05);
+      box-shadow: none;
       min-width: 0;
     }
     .investment-insight-card {
-      padding: 16px;
-      border-top: 4px solid #cf8a00;
-      min-height: 190px;
+      display: grid;
+      grid-template-columns: minmax(220px, .34fr) minmax(0, .66fr);
+      gap: 22px;
+      align-items: start;
+      padding: 18px 0;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      min-height: 0;
     }
-    .investment-insight-card:nth-child(2) { border-top-color: #1b998b; }
-    .investment-insight-card:nth-child(3) { border-top-color: #8b6f47; }
-    .investment-insight-card:nth-child(4) { border-top-color: #d4514c; }
     .investment-insight-card h3 {
-      margin: 0 0 10px;
+      margin: 0;
       font-size: 16px;
       line-height: 1.35;
     }
@@ -2062,7 +2058,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 18px;
-      box-shadow: 0 10px 38px rgba(24,32,38,.05);
+      box-shadow: none;
       min-width: 0;
     }
     .weekly-search {
@@ -2132,7 +2128,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 18px;
-      box-shadow: 0 10px 38px rgba(24,32,38,.05);
+      box-shadow: none;
       min-width: 0;
     }
     .all-tags-head {
@@ -2445,7 +2441,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 18px;
-      box-shadow: 0 10px 38px rgba(24,32,38,.05);
+      box-shadow: none;
       min-width: 0;
     }
     .category-total-panel h3, .category-trend-head h3 {
@@ -2809,7 +2805,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 18px;
-      box-shadow: 0 10px 38px rgba(24,32,38,.05);
+      box-shadow: none;
     }
     .legend {
       display: flex;
@@ -2854,7 +2850,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 18px;
-      box-shadow: 0 10px 38px rgba(24,32,38,.05);
+      box-shadow: none;
     }
     .panel h3 {
       margin: 0 0 16px;
@@ -2917,7 +2913,7 @@
       border-radius: 8px;
       padding: 24px;
       margin-bottom: 18px;
-      box-shadow: 0 10px 38px rgba(24,32,38,.05);
+      box-shadow: none;
     }
     .phase-meta {
       display: flex;
@@ -3130,9 +3126,11 @@
     }
     @media (max-width: 560px) {
       .shell { width: min(100vw - 24px, 1180px); }
-      .stat-grid, .term-grid, .year-strip, .category-card-grid, .category-spark-grid, .emotion-summary-grid, .emotion-phase-grid, .investment-summary-grid, .investment-phase-grid, .review-stat-grid, .review-insight-grid, .review-phase-grid { grid-template-columns: 1fr; }
+      .stat b { font-size: 26px; }
+      .term-grid, .year-strip, .category-card-grid, .category-spark-grid, .emotion-phase-grid, .investment-phase-grid, .review-phase-grid { grid-template-columns: 1fr; }
+      .hero-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .insight-card, .emotion-insight-card, .investment-insight-card { grid-template-columns: 1fr; gap: 8px; }
       .rank-row { grid-template-columns: minmax(0,1fr) 78px 42px; }
-      .review-insight { min-height: auto; }
       .review-month-scroll {
         overflow-x: visible;
         padding-bottom: 0;
@@ -3200,21 +3198,21 @@
     <section class="hero">
       <div>
         <span class="eyebrow">Telegram export · 2023-02-13 至 2026-06-21</span>
-        <h1>维兰的存储间，研究生三年回看</h1>
+        <h1>研究生三年回看</h1>
         <p class="hero-copy">
-          这份频道记录最值得看的不是单条消息，而是 <strong>长期重复出现的主题、注意力来源、现实变量和自我叙述的变化</strong>。
-          它同时是日记、资料库、研究笔记、审美剪藏和问题清单。
+          这份报告追踪三年记录中反复出现的主题、注意力来源、现实变化与自我叙述。
+          原始频道兼具日记、资料库、研究笔记、审美剪藏和问题清单的功能。
         </p>
         <nav class="hero-actions" aria-label="页面导航">
           <a href="#insights">重点关注</a>
           <a href="#manual-review">审阅总览</a>
           <a href="#longitudinal">纵向复盘</a>
-          <a href="#deep-dives">主题态度</a>
+          <a href="#deep-dives">主题变化</a>
           <a href="#personal-emotions">个人情绪</a>
           <a href="#investment-journey">投资复盘</a>
           <a href="#weekly-tags">周标签</a>
           <a href="#tag-categories">标签分类</a>
-          <a href="#timeline">时间光谱</a>
+          <a href="#timeline">月度时间线</a>
           <a href="#themes">主题与来源</a>
           <a href="#phases">六个阶段</a>
           <a href="#rhythm">记录节奏</a>
@@ -3235,45 +3233,45 @@
 
     <section class="band" id="insights">
       <div class="section-head">
-        <h2>先看这些</h2>
-        <p>下面五点来自新的全量文本审阅台账。它们的目标不是替代原文，而是指出哪些地方值得回到 Telegram 逐条复看。</p>
+        <h2>核心结论</h2>
+        <p>以下五点概括逐条审阅结果，并标出值得返回 Telegram 核对的记录。</p>
       </div>
       <div class="insights">
         <article class="insight-card">
-          <h3>总览已切到逐条审阅台账</h3>
-          <p>这次把 10553 条含文本消息全部写入 telegram_three_year_analysis/theme_manual_review.json，其中 8325 条进入主题统计，2228 条保留为低信号文本而不强行解释。</p>
+          <h3>10,553 条文本已逐条标注</h3>
+          <p>8,325 条记录纳入主题统计；2,228 条作为低信号文本保留，不作强行归类。</p>
         </article>
         
 
         <article class="insight-card">
-          <h3>个人观点和外部资料分开统计</h3>
-          <p>审阅后识别出 3162 条个人记录、1202 条资料加短评、2922 条外部资料。标签和链接仍然保留，但不再直接等同于你的态度。</p>
+          <h3>统计区分个人记录与外部资料</h3>
+          <p>审阅识别出 3,162 条个人记录、1,202 条资料加短评和 2,922 条外部资料；标签与链接不直接代表你的态度。</p>
         </article>
         
 
         <article class="insight-card">
-          <h3>#总结 被当作复盘锚点</h3>
-          <p>171 条 #总结 进入阶段复盘，但不作为新的月度事件重复计数；月度趋势主要使用 8154 条具体内容。</p>
+          <h3>#总结 用作阶段复盘锚点</h3>
+          <p>171 条 #总结 参与阶段复盘，但不重复计入月度事件；月度趋势使用 8,154 条具体内容。</p>
         </article>
         
 
         <article class="insight-card">
-          <h3>情绪和投资使用专项审阅覆盖</h3>
-          <p>总审阅层吸收了 1194 条情绪专项结果和 797 条投资专项结果，避免这些高敏主题只按关键词误判。</p>
+          <h3>情绪与投资采用专项标注</h3>
+          <p>总览合并 1,194 条情绪专项结果和 797 条投资专项结果，以语境判断替代单纯的关键词匹配。</p>
         </article>
         
 
         <article class="insight-card">
-          <h3>最强主题仍然是长期输入与自我解释</h3>
-          <p>审阅后最高频主题是「阅读与知识管理」(2874 条)。但真正值得看的是它和复盘、研究、身体、投资、毕业之间如何互相牵引。</p>
+          <h3>阅读与知识管理记录最多</h3>
+          <p>这一主题共 2,874 条记录，并持续与复盘、研究、身体、投资和毕业问题交织。</p>
         </article>
         </div>
     </section>
 
     <section class="band" id="manual-review">
       <div class="section-head">
-        <h2>审阅版主题总览</h2>
-        <p>这部分不再只用关键词计数：脚本先抽取每条文本，再按语境判断主题、来源角色、个人/外部关系和姿态，并把结果写入 theme_manual_review.json。情绪和投资沿用已经单独审阅过的结果。</p>
+        <h2>主题总览</h2>
+        <p>每条文本均按语境标注主题、来源角色、个人与外部资料的关系及表达姿态；情绪和投资采用各自的专项标注结果。</p>
       </div>
       
       <div class="review-board">
@@ -3309,41 +3307,10 @@
         
 
         <article class="review-stat">
-          <b>1,194 情绪 / 797 投资</b>
-          <span>专项审阅覆盖</span>
+          <b>1,194 / 797</b>
+          <span>情绪 / 投资专项审阅</span>
         </article>
         </div>
-        <div class="review-insight-grid">
-        <article class="review-insight">
-          <h3>总览已切到逐条审阅台账</h3>
-          <p>这次把 10553 条含文本消息全部写入 telegram_three_year_analysis/theme_manual_review.json，其中 8325 条进入主题统计，2228 条保留为低信号文本而不强行解释。</p>
-        </article>
-        
-
-        <article class="review-insight">
-          <h3>个人观点和外部资料分开统计</h3>
-          <p>审阅后识别出 3162 条个人记录、1202 条资料加短评、2922 条外部资料。标签和链接仍然保留，但不再直接等同于你的态度。</p>
-        </article>
-        
-
-        <article class="review-insight">
-          <h3>#总结 被当作复盘锚点</h3>
-          <p>171 条 #总结 进入阶段复盘，但不作为新的月度事件重复计数；月度趋势主要使用 8154 条具体内容。</p>
-        </article>
-        
-
-        <article class="review-insight">
-          <h3>情绪和投资使用专项审阅覆盖</h3>
-          <p>总审阅层吸收了 1194 条情绪专项结果和 797 条投资专项结果，避免这些高敏主题只按关键词误判。</p>
-        </article>
-        
-
-        <article class="review-insight">
-          <h3>最强主题仍然是长期输入与自我解释</h3>
-          <p>审阅后最高频主题是「阅读与知识管理」(2874 条)。但真正值得看的是它和复盘、研究、身体、投资、毕业之间如何互相牵引。</p>
-        </article>
-        </div>
-
         <div class="review-overview-grid">
           <section class="review-month-panel" data-export-title="审阅后主题月度趋势">
             <div class="category-trend-head">
@@ -8368,7 +8335,7 @@
     <section class="band" id="longitudinal">
       <div class="section-head">
         <h2>纵向复盘</h2>
-        <p>这里把你指定的七个方向合并成一组长线分析：人生事件、反复问题、身体生活系统、自我叙事、高峰低谷、当时判断与后来结果、年度主题句。每个判断都附带可回看的文本证据，完整数据写入 longitudinal_analysis.json。</p>
+        <p>七条长线覆盖人生事件、反复问题、身体与生活系统、自我叙事、高峰低谷、判断与结果以及年度主题句。每项判断都附有可回看的文本证据。</p>
       </div>
       
       <div class="longitudinal-board">
@@ -8404,7 +8371,7 @@
         
 
         <article class="long-purpose-card">
-          <strong>当时判断 vs 后来结果</strong>
+          <strong>当时判断与后来结果</strong>
           <p>把早期判断和后来的结果并排，训练对自己判断模式的复盘能力。</p>
         </article>
         
@@ -9567,13 +9534,13 @@
 
         <section class="long-panel" id="long-judgments" data-export-title="当时判断与后来结果">
           <div class="category-trend-head">
-            <h3>当时判断 vs 后来结果</h3>
+            <h3>当时判断与后来结果</h3>
             <span>6 组前后对照</span>
           </div>
           <div class="long-judgment-list">
         <article class="long-judgment-row">
           <header>
-            <h3>表达空间：不打扰别人 vs 希望被看见</h3>
+            <h3>表达空间：从避免打扰到希望被看见</h3>
           </header>
           <p>频道一开始解决的是低压力表达，后来也承载了“让别人看到更丰富的我”的愿望。</p>
           <div class="long-pair-grid">
@@ -9603,7 +9570,7 @@
 
         <article class="long-judgment-row">
           <header>
-            <h3>研究：最低标准毕业 vs 真实交付压力</h3>
+            <h3>研究：最低毕业预期与真实交付压力</h3>
           </header>
           <p>早期把毕业想成规则问题，后期发现它也是解释工作、面对评价和处理意外的过程。</p>
           <div class="long-pair-grid">
@@ -9633,7 +9600,7 @@
 
         <article class="long-judgment-row">
           <header>
-            <h3>投资：爆仓刺激 vs 风险控制和底气</h3>
+            <h3>投资：从爆仓刺激到风险控制</h3>
           </header>
           <p>投资从高波动尝试，变成风险、手续费、仓位和生活安全感的综合问题。</p>
           <div class="long-pair-grid">
@@ -9663,7 +9630,7 @@
 
         <article class="long-judgment-row">
           <header>
-            <h3>身体：小问题 vs 长期管理</h3>
+            <h3>身体：从小问题到长期管理</h3>
           </header>
           <p>身体信号一开始像检查结果，后来变成不可绕开的生活制度。</p>
           <div class="long-pair-grid">
@@ -9693,7 +9660,7 @@
 
         <article class="long-judgment-row">
           <header>
-            <h3>时间：过得太快 vs 用记录恢复连续性</h3>
+            <h3>时间：用记录恢复生活的连续性</h3>
           </header>
           <p>记录系统不是装饰，而是在补偿时间感和长期记忆的断裂。</p>
           <div class="long-pair-grid">
@@ -9723,7 +9690,7 @@
 
         <article class="long-judgment-row">
           <header>
-            <h3>AI：真香工具 vs 工作流基础设施</h3>
+            <h3>AI：从尝鲜工具到工作流基础设施</h3>
           </header>
           <p>AI 从局部工具逐渐变成研究、编码、写作和整理记录的基础设施。</p>
           <div class="long-pair-grid">
@@ -9937,8 +9904,8 @@
 
     <section class="band" id="deep-dives">
       <div class="section-head">
-        <h2>主题态度变化</h2>
-        <p>这里按审阅后的主题追踪三年里的态度轨迹：哪些部分始终一致，哪些部分变化很大。每个主题都保留代表性文本，便于回到原始记录核对。</p>
+        <h2>主题变化</h2>
+        <p>按主题追踪三年中的态度轨迹，区分持续倾向与明显转变。每个主题都保留代表性文本，便于核对原始记录。</p>
       </div>
       <div class="deep-stack">
             <section class="deep-card" id="deep-reading_knowledge" data-export-title="主题态度 - 阅读">
@@ -11997,13 +11964,13 @@
     <section class="band" id="personal-emotions">
       <div class="section-head">
         <h2>个人情绪变化</h2>
-        <p>这里先用关键词召回候选文本，再按语境审阅后写入 emotion_manual_review.json，并从这份审阅文件统计。单条文本可以同时贡献多个情绪维度；月度趋势只统计当月具体内容，#总结 只作为复盘锚点。它是回看线索，不是心理诊断。</p>
+        <p>候选文本经过关键词召回与逐条语境审阅。单条文本可归入多个情绪维度；月度趋势只统计当月具体内容，#总结 单独作为复盘锚点。本节提供回看线索，不构成心理诊断。</p>
       </div>
       
       <div class="emotion-board">
         <div class="emotion-insights">
         <article class="emotion-insight-card">
-          <h3>情绪记录不是边角料，而是频道的第二条主线</h3>
+          <h3>情绪记录构成频道的另一条长期线索</h3>
           <p>关键词先召回 3376 条候选，再逐条审阅后纳入 1023 条具体情绪记录，约占非总结文本消息的 9.9%。#总结 只作为复盘锚点，不进入月度趋势。</p>
         </article>
         
@@ -12021,13 +11988,13 @@
         
 
         <article class="emotion-insight-card">
-          <h3>后期不是情绪更少，而是更会解释情绪</h3>
-          <p>前三阶段有 319 条具体情绪记录，后三阶段有 704 条。后期的 #想法/#问题/#碎碎念 更密集，说明情绪越来越少停在感受本身，而是被转写成判断、原因和下一步。</p>
+          <h3>后期记录更常解释情绪的来源</h3>
+          <p>前三阶段有 319 条具体情绪记录，后三阶段有 704 条。后期的 #想法、#问题 和 #碎碎念 更密集，情绪也更常被写成判断、原因与下一步。</p>
         </article>
         
 
         <article class="emotion-insight-card">
-          <h3>最值得复看的不是最痛苦的句子，而是反复出现的解释方式</h3>
+          <h3>优先复看跨年份重复出现的解释方式</h3>
           <p>反思/自我解释信号最高的月份是 2026-05。如果某些说法跨年重复出现，说明它可能已经是你的稳定叙事，需要判断它是在帮助你，还是在限制你。</p>
         </article>
         </div>
@@ -15487,32 +15454,32 @@
 
     <section class="band" id="investment-journey">
       <div class="section-head">
-        <h2>投资路上的想法与经历</h2>
-        <p>这里先用投资关键词、标签和交易语境召回候选，再逐条审阅写入 investment_manual_review.json。统计只使用审阅后的个人观点、真实操作、学习记录、风险复盘和 #总结 锚点；同一条记录可以同时属于多个投资维度。</p>
+        <h2>投资记录与观点变化</h2>
+        <p>候选文本经过投资关键词、标签和交易语境召回，再逐条审阅。统计包含个人观点、真实操作、学习记录、风险复盘和 #总结 锚点；同一条记录可归入多个投资维度。</p>
       </div>
       
       <div class="investment-board">
         <div class="investment-insights">
         <article class="investment-insight-card">
-          <h3>投资线从资料兴趣变成现实变量</h3>
-          <p>关键词和标签先召回 1078 条候选，审阅后纳入 797 条，其中 709 条进入月度趋势。后期投资记录不再只是看资料，而是和收入、毕业、Web3 工作、身体安全感混在一起。</p>
+          <h3>投资从资料阅读转向实际操作与风险管理</h3>
+          <p>共召回 1,078 条候选，审阅后纳入 797 条，其中 709 条进入月度趋势。后期记录同时涉及收入、毕业、Web3 工作与生活安全感。</p>
         </article>
         
 
         <article class="investment-insight-card">
-          <h3>后期密度明显高于早期</h3>
+          <h3>投资记录主要集中在后三阶段</h3>
           <p>前三阶段有 83 条具体投资记录，后三阶段有 626 条。峰值月份是 2025-01，说明投资在后期从偶发话题变成持续问题。</p>
         </article>
         
 
         <article class="investment-insight-card">
-          <h3>主线不是价格，而是收益来源</h3>
-          <p>最高维度是 投资理念、复盘与收益来源。你反复写的不是单纯涨跌，而是交易结构、套利空间、风险来源、期权/波动率和可持续收入。</p>
+          <h3>记录重点转向收益来源与风险结构</h3>
+          <p>最高频维度是投资理念、复盘与收益来源，内容集中在交易结构、套利空间、风险来源、期权与波动率以及可持续收入。</p>
         </article>
         
 
         <article class="investment-insight-card">
-          <h3>真实操作与风控开始成对出现</h3>
+          <h3>后期记录常同时涉及操作、仓位与风险控制</h3>
           <p>最常见记录姿态是「Web3机会」(207 条)。越到后期，记录里越常同时出现操作、仓位、风险和复盘，而不是只写一个看法。</p>
         </article>
         </div>
@@ -16056,7 +16023,7 @@
         </div>
         <div class="investment-comparison-panel" data-export-title="投资观点前后对照">
           <div class="category-trend-head">
-            <h3>当时观点 vs 现在轨迹</h3>
+            <h3>当时观点与后续轨迹</h3>
             <span>按主题抽取较早与较晚摘录</span>
           </div>
           <div class="investment-comparison-list">
@@ -34159,7 +34126,7 @@
           <div class="category-change-panel" data-export-title="标签主题分类前后变化">
             <div class="category-trend-head">
               <h3>前后变化榜</h3>
-              <span>前三阶段 vs 后三阶段</span>
+              <span>前三阶段与后三阶段</span>
             </div>
             <div class="category-change-list">
             <div class="category-change-row rise">
@@ -35846,7 +35813,7 @@
     <section class="band" id="rhythm">
       <div class="section-head">
         <h2>记录节奏</h2>
-        <p>什么时候最常记录，某种程度上说明了频道在生活中的位置：它是白天的资料夹，还是夜里的自我对话。</p>
+        <p>记录时段显示了频道在生活中的用途：白天更多承担资料整理，夜间则更接近自我对话。</p>
       </div>
       <div class="rhythm">
         <div class="panel" data-export-title="24小时记录分布">
@@ -35934,7 +35901,7 @@
     <section class="band">
       <div class="section-head">
         <h2>年度切片</h2>
-        <p>年份不是严格边界，但能快速看出：2023 更像资料和问题的建库，2024 是研究与工程的深化，2025 现实变量变强，2026 则进入毕业和 AI 工具化的收束期。</p>
+        <p>年度切片显示：2023 主要建立资料与问题库，2024 深化研究和工程实践，2025 更多记录身体、金钱等现实压力，2026 集中处理毕业与 AI 工具化。</p>
       </div>
       <div class="year-strip" data-export-title="年度切片">
         <article class="year-panel">
@@ -36114,11 +36081,8 @@
       .export-root time {
         overflow-wrap: anywhere !important;
       }
-      .export-root .insights,
-      .export-root .review-insight-grid,
-      .export-root .investment-insights,
       .export-root .long-purpose-grid {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         overflow: visible !important;
       }
       .export-root .review-comparison-card header,
