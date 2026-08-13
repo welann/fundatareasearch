@@ -590,7 +590,7 @@
     <section class="archive-section" id="archive" aria-labelledby="archive-title">
       <div class="archive-heading">
         <h2 id="archive-title">阅览切片</h2>
-        <p><span id="visible-count">—</span> 条记录<br>默认从早到晚</p>
+        <p><span id="visible-count">—</span> 条记录<br>默认最新优先</p>
       </div>
 
       <div class="controls" aria-label="筛选阅览记录">
@@ -604,7 +604,7 @@
           <button class="filter-button" type="button" data-medium="漫画" aria-pressed="false">漫画</button>
           <button class="filter-button" type="button" data-medium="阅读随记" aria-pressed="false">阅读随记</button>
           <span class="control-spacer"></span>
-          <button class="sort-button" id="sort-button" type="button">切到最新优先</button>
+          <button class="sort-button" id="sort-button" type="button">切到从早到晚</button>
           <label class="search-wrap">
             <span hidden>搜索作品或原话</span>
             <input id="search" type="search" placeholder="搜索作品或原话">
@@ -625,7 +625,7 @@
   <script id="report-data" type="application/json">__REPORT_DATA__</script>
   <script>
     const report = JSON.parse(document.getElementById('report-data').textContent);
-    const state = { medium: '全部', query: '', newestFirst: false };
+    const state = { medium: '全部', query: '', newestFirst: true };
     const mediumOrder = ['书', '电影', '番剧', '电视剧', '纪录片', '漫画', '阅读随记'];
     const collator = new Intl.Collator('zh-CN');
 
