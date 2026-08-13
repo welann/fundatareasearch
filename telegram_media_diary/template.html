@@ -364,6 +364,7 @@
     .note[data-medium="番剧"] { --accent: var(--violet); }
     .note[data-medium="电视剧"] { --accent: var(--green); }
     .note[data-medium="纪录片"] { --accent: var(--cyan); }
+    .note[data-medium="漫画"] { --accent: var(--red); }
     .note[data-medium="阅读随记"] { --accent: var(--yellow); }
     .note::before {
       content: "";
@@ -418,8 +419,29 @@
     }
     .reflection {
       margin: 0;
+      display: grid;
+      gap: 16px;
       font: 400 clamp(18px, 2vw, 22px)/1.85 var(--display);
+    }
+    .reflection-block {
+      margin: 0;
       white-space: pre-line;
+    }
+    .reflection-quote {
+      padding: 16px 18px;
+      color: #414a60;
+      background: #f0f2f8;
+      border-left: 3px solid var(--accent);
+      font-size: .86em;
+      line-height: 1.78;
+    }
+    .reflection-quote::before {
+      content: "原文摘录";
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font: 700 10px/1.4 var(--utility);
+      letter-spacing: .1em;
     }
     .reflection.is-collapsed {
       max-height: 12.95em;
@@ -444,6 +466,17 @@
       border-bottom: 1px solid currentColor;
       cursor: pointer;
       font: 11px/1 var(--utility);
+    }
+    .reference-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-top: 18px;
+      font: 11px/1.5 var(--utility);
+    }
+    .reference-links a {
+      color: var(--blue);
+      text-underline-offset: 4px;
     }
 
     .empty {
@@ -536,7 +569,7 @@
       </div>
       <div class="archive-stamp" aria-label="档案摘录数量">
         <strong id="entry-count">—</strong>
-        <span>条原话摘录<br>纯收藏不计入</span>
+        <span>条阅览记录<br>纯收藏不计入</span>
       </div>
     </div>
     <div class="reel-wrap">
@@ -568,6 +601,7 @@
           <button class="filter-button" type="button" data-medium="番剧" aria-pressed="false">番剧</button>
           <button class="filter-button" type="button" data-medium="电视剧" aria-pressed="false">电视剧</button>
           <button class="filter-button" type="button" data-medium="纪录片" aria-pressed="false">纪录片</button>
+          <button class="filter-button" type="button" data-medium="漫画" aria-pressed="false">漫画</button>
           <button class="filter-button" type="button" data-medium="阅读随记" aria-pressed="false">阅读随记</button>
           <span class="control-spacer"></span>
           <button class="sort-button" id="sort-button" type="button">切到最新优先</button>
@@ -592,7 +626,7 @@
   <script>
     const report = JSON.parse(document.getElementById('report-data').textContent);
     const state = { medium: '全部', query: '', newestFirst: false };
-    const mediumOrder = ['书', '电影', '番剧', '电视剧', '纪录片', '阅读随记'];
+    const mediumOrder = ['书', '电影', '番剧', '电视剧', '纪录片', '漫画', '阅读随记'];
     const collator = new Intl.Collator('zh-CN');
 
     const el = (tag, className, text) => {
@@ -617,6 +651,7 @@
         ['标签原档', `${report.meta.source_tagged_messages} 条`],
         ['进入正文', `${report.meta.selected_entries} 条`],
         ['涉及作品', `${report.meta.works} 部`],
+        ['随文书摘', `${report.meta.quote_blocks} 段`],
         ['媒介', mediumOrder.filter(m => report.counts.medium[m]).join(' / ')]
       ];
       const factsNode = document.getElementById('facts');
@@ -671,17 +706,35 @@
       head.append(titleBox, link);
 
       const reflectionWrap = el('div', 'reflection-wrap');
-      const reflection = el('blockquote', 'reflection', entry.excerpt);
+      const reflection = el('div', 'reflection');
+      entry.blocks.forEach(block => {
+        const tag = block.kind === 'quote' ? 'blockquote' : 'p';
+        const className = `reflection-block reflection-${block.kind}`;
+        reflection.append(el(tag, className, block.text));
+      });
       reflectionWrap.append(reflection);
-      if (entry.excerpt.length > 430 || entry.paragraphs.length > 4) {
+      if (entry.excerpt.length > 430 || entry.blocks.length > 4) {
         reflection.classList.add('is-collapsed');
-        const button = el('button', 'expand-button', '展开完整摘录');
+        const button = el('button', 'expand-button', '展开完整记录');
         button.type = 'button';
         button.addEventListener('click', () => {
           const collapsed = reflection.classList.toggle('is-collapsed');
-          button.textContent = collapsed ? '展开完整摘录' : '收起';
+          button.textContent = collapsed ? '展开完整记录' : '收起';
         });
         reflectionWrap.append(button);
+      }
+
+      if (entry.reference_links.length) {
+        const references = el('nav', 'reference-links');
+        references.setAttribute('aria-label', '消息中的相关链接');
+        entry.reference_links.forEach((reference, index) => {
+          const referenceLink = el('a', '', `相关链接 ${index + 1} ↗`);
+          referenceLink.href = reference.url;
+          referenceLink.target = '_blank';
+          referenceLink.rel = 'noopener noreferrer';
+          references.append(referenceLink);
+        });
+        reflectionWrap.append(references);
       }
 
       note.append(head, reflectionWrap);
