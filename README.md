@@ -7,6 +7,7 @@
 - `research/hanbalongwang_summary.html`：《憨巴龙王》小节化深度阅读报告。
 - `telegram_three_year_analysis/index.html`：研究生三年频道记录回看。
 - `telegram_trading_analysis/index.html`：交易标签、本人投资观点与时间线分析。
+- `telegram_media_diary/index.html`：书、电影、番剧、电视剧与纪录片的原话阅览手账。
 
 所有页面都尽量保持单文件交付，不依赖后端服务，适合本地打开、静态托管和长期归档。
 
@@ -68,6 +69,22 @@
 
 目录中的 `analysis.json` 是可审计的结构化结果，`build_report.py` 和 `template.html` 用于从 Telegram 导出文件重新生成页面。
 
+### 私人阅览档案
+
+`telegram_media_diary/index.html` 从 `#书`、`#读书`、`#观剧`、`#纪录片` 和 `#漫画` 记录中，摘取明确属于本人的阅读与观看感悟。
+
+当前口径下，共检查 272 条标签记录，保留 80 条有原始感悟的摘录，涉及 70 部作品，时间覆盖 2023 年 4 月至 2026 年 8 月。纯收藏、待看链接、外部影评和 Telegram 引用块不进入正文。
+
+页面主要包含：
+
+- 精选胶片：横向浏览有代表性的原话片段。
+- 时间档案：从早到晚串起不同作品留下的当时感受。
+- 媒介筛选：支持书、电影、番剧、电视剧、纪录片和阅读随记。
+- 搜索与排序：可按作品名或原话搜索，并切换时间方向。
+- 原消息回查：每条摘录都保留对应的 Telegram 消息入口。
+
+目录中的 `curation.json` 保存人工复核的消息 ID、作品名、媒介与阅读状态；`analysis.json` 是生成后的结构化摘录，`build_report.py` 和 `template.html` 用于重建页面。
+
 ## 本地查看
 
 直接打开首页：
@@ -83,6 +100,7 @@ open "research/mmk_sz.html"
 open "research/hanbalongwang_summary.html"
 open "telegram_three_year_analysis/index.html"
 open "telegram_trading_analysis/index.html"
+open "telegram_media_diary/index.html"
 ```
 
 ## 新增分析页面

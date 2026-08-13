@@ -1,0 +1,2482 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>读过，也看过｜私人阅览档案</title>
+    <meta
+      name="description"
+      content="从 Telegram 原始记录中提取的书、电影、番剧、电视剧与纪录片感悟。"
+    />
+    <link rel="icon" href="data:," />
+    <style>
+      :root {
+        --ink: #172033;
+        --blue: #243fbd;
+        --blue-dark: #152776;
+        --paper: #f7f8fc;
+        --white: #ffffff;
+        --mist: #dce4f5;
+        --muted: #68708a;
+        --red: #ed5448;
+        --yellow: #f3c948;
+        --cyan: #3cb7c2;
+        --violet: #7b64d5;
+        --green: #4a9b72;
+        --line: #b8c3dc;
+        --display: "STKaiti", "Kaiti SC", "KaiTi", serif;
+        --body:
+          -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans CJK SC",
+          "Microsoft YaHei", sans-serif;
+        --utility: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: var(--body);
+        text-rendering: optimizeLegibility;
+      }
+
+      a {
+        color: inherit;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        color: inherit;
+      }
+
+      .skip-link {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 20;
+        padding: 10px 14px;
+        background: var(--yellow);
+        transform: translateY(-160%);
+      }
+      .skip-link:focus {
+        transform: translateY(0);
+      }
+
+      .masthead {
+        color: var(--white);
+        background: var(--blue);
+        border-bottom: 8px solid var(--yellow);
+        overflow: hidden;
+      }
+
+      .topbar {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+        min-height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+        font-family: var(--utility);
+        font-size: 12px;
+        letter-spacing: 0.07em;
+      }
+
+      .topbar a {
+        text-decoration: none;
+        padding: 8px 0;
+      }
+      .topbar a:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+
+      .hero {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 68px 0 50px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(250px, 0.55fr);
+        gap: clamp(32px, 7vw, 90px);
+        align-items: end;
+      }
+
+      .kicker {
+        margin: 0 0 18px;
+        color: var(--yellow);
+        font: 600 12px/1 var(--utility);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin: 0;
+        font: 400 clamp(64px, 10vw, 136px)/0.86 var(--display);
+        letter-spacing: -0.08em;
+      }
+
+      .hero-deck {
+        margin: 28px 0 0;
+        max-width: 690px;
+        font-size: clamp(16px, 2vw, 21px);
+        line-height: 1.8;
+        color: #e7ebff;
+      }
+
+      .archive-stamp {
+        border: 2px solid rgba(255, 255, 255, 0.82);
+        padding: 20px;
+        transform: rotate(2deg);
+        box-shadow: 8px 8px 0 var(--blue-dark);
+      }
+
+      .archive-stamp strong,
+      .archive-stamp span {
+        display: block;
+      }
+      .archive-stamp strong {
+        font: 700 50px/1 var(--utility);
+        color: var(--yellow);
+      }
+      .archive-stamp span {
+        margin-top: 8px;
+        font: 12px/1.65 var(--utility);
+        letter-spacing: 0.08em;
+      }
+
+      .reel-wrap {
+        padding: 0 0 58px;
+      }
+      .reel-label {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto 14px;
+        font: 600 12px/1 var(--utility);
+        letter-spacing: 0.12em;
+        color: #e7ebff;
+      }
+      .reel {
+        position: relative;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(340px, 43vw);
+        gap: 14px;
+        overflow-x: auto;
+        padding: 34px max(20px, calc((100vw - 1180px) / 2)) 36px;
+        background: #0d173f;
+        scrollbar-color: var(--yellow) #0d173f;
+        scroll-snap-type: x proximity;
+      }
+      .reel::before,
+      .reel::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 13px;
+        background: repeating-linear-gradient(
+          90deg,
+          transparent 0 17px,
+          var(--paper) 17px 29px,
+          transparent 29px 42px
+        );
+        opacity: 0.85;
+        pointer-events: none;
+      }
+      .reel::before {
+        top: 7px;
+      }
+      .reel::after {
+        bottom: 7px;
+      }
+
+      .frame {
+        min-height: 250px;
+        padding: 26px 28px 24px;
+        color: var(--ink);
+        background: var(--white);
+        border-top: 8px solid var(--red);
+        scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .frame:nth-child(3n + 2) {
+        border-top-color: var(--yellow);
+      }
+      .frame:nth-child(3n) {
+        border-top-color: var(--cyan);
+      }
+      .frame blockquote {
+        margin: 0;
+        font: 400 clamp(19px, 2.2vw, 25px)/1.7 var(--display);
+      }
+      .frame footer {
+        margin-top: 22px;
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        color: var(--muted);
+        font: 11px/1.5 var(--utility);
+      }
+
+      main {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 62px 0 90px;
+      }
+
+      .ledger {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 42px;
+        align-items: start;
+        padding-bottom: 62px;
+        border-bottom: 1px solid var(--line);
+      }
+      .ledger h2,
+      .archive-heading h2 {
+        margin: 0;
+        font: 400 clamp(38px, 6vw, 68px)/1 var(--display);
+        letter-spacing: -0.05em;
+      }
+      .ledger-copy {
+        margin: 20px 0 0;
+        max-width: 670px;
+        color: #3f4961;
+        font-size: 16px;
+        line-height: 1.9;
+      }
+
+      .facts {
+        margin: 0;
+        border-top: 2px solid var(--ink);
+      }
+      .fact {
+        display: grid;
+        grid-template-columns: 76px 1fr;
+        gap: 16px;
+        align-items: baseline;
+        padding: 13px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .fact dt {
+        color: var(--muted);
+        font: 11px/1.4 var(--utility);
+        letter-spacing: 0.07em;
+      }
+      .fact dd {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .archive-section {
+        padding-top: 62px;
+      }
+      .archive-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 30px;
+        margin-bottom: 28px;
+      }
+      .archive-heading p {
+        margin: 0;
+        color: var(--muted);
+        font: 12px/1.6 var(--utility);
+        text-align: right;
+      }
+
+      .controls {
+        position: sticky;
+        top: 0;
+        z-index: 8;
+        margin: 0 0 42px;
+        padding: 13px 14px;
+        color: var(--white);
+        background: rgba(23, 32, 51, 0.96);
+        border-bottom: 4px solid var(--yellow);
+        backdrop-filter: blur(10px);
+      }
+      .control-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 2px 0;
+      }
+      .filter-button,
+      .sort-button {
+        flex: 0 0 auto;
+        min-height: 38px;
+        padding: 8px 12px;
+        color: #dfe5f3;
+        background: transparent;
+        border: 1px solid #68738e;
+        border-radius: 0;
+        cursor: pointer;
+        font: 12px/1 var(--utility);
+      }
+      .filter-button:hover,
+      .sort-button:hover {
+        border-color: var(--white);
+      }
+      .filter-button[aria-pressed="true"] {
+        color: var(--ink);
+        background: var(--yellow);
+        border-color: var(--yellow);
+      }
+      .control-spacer {
+        flex: 1;
+        min-width: 10px;
+      }
+      .search-wrap {
+        flex: 0 0 min(270px, 38vw);
+        position: relative;
+      }
+      .search-wrap input {
+        width: 100%;
+        min-height: 38px;
+        padding: 8px 12px;
+        color: var(--white);
+        background: #0f1728;
+        border: 1px solid #68738e;
+        border-radius: 0;
+        outline: none;
+      }
+      .search-wrap input::placeholder {
+        color: #9ca6bc;
+      }
+      .search-wrap input:focus {
+        border-color: var(--yellow);
+      }
+
+      .year-group {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        gap: 34px;
+        margin-bottom: 68px;
+      }
+      .year-mark {
+        position: sticky;
+        top: 82px;
+        align-self: start;
+        padding-top: 10px;
+        font: 700 32px/1 var(--utility);
+        color: var(--blue);
+      }
+      .year-mark::after {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 7px;
+        margin-top: 14px;
+        background: var(--red);
+      }
+
+      .notes {
+        position: relative;
+        display: grid;
+        gap: 22px;
+      }
+      .notes::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 14px;
+        width: 1px;
+        background: var(--line);
+      }
+
+      .note {
+        --accent: var(--blue);
+        position: relative;
+        margin-left: 42px;
+        padding: 0 0 24px 22px;
+        background: var(--white);
+        border-left: 7px solid var(--accent);
+        box-shadow: 0 1px 0 rgba(23, 32, 51, 0.08);
+      }
+      .note[data-medium="电影"] {
+        --accent: var(--red);
+      }
+      .note[data-medium="番剧"] {
+        --accent: var(--violet);
+      }
+      .note[data-medium="电视剧"] {
+        --accent: var(--green);
+      }
+      .note[data-medium="纪录片"] {
+        --accent: var(--cyan);
+      }
+      .note[data-medium="阅读随记"] {
+        --accent: var(--yellow);
+      }
+      .note::before {
+        content: "";
+        position: absolute;
+        left: -55px;
+        top: 26px;
+        width: 13px;
+        height: 13px;
+        background: var(--accent);
+        border: 4px solid var(--paper);
+        outline: 1px solid var(--line);
+      }
+
+      .note-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 22px;
+        padding: 21px 22px 16px 0;
+        border-bottom: 1px solid #dfe4ef;
+      }
+      .note-title {
+        margin: 0;
+        font-size: clamp(20px, 2.7vw, 29px);
+        line-height: 1.25;
+        letter-spacing: -0.025em;
+      }
+      .note-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 7px 12px;
+        margin-top: 10px;
+        color: var(--muted);
+        font: 11px/1.4 var(--utility);
+      }
+      .medium-label {
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .status-label::before {
+        content: "[";
+      }
+      .status-label::after {
+        content: "]";
+      }
+      .message-link {
+        align-self: start;
+        padding: 8px 0;
+        color: var(--blue);
+        font: 11px/1.4 var(--utility);
+        text-decoration: none;
+        border-bottom: 1px solid currentColor;
+      }
+      .message-link:hover {
+        color: var(--red);
+      }
+
+      .reflection-wrap {
+        position: relative;
+        padding: 22px 28px 0 0;
+      }
+      .reflection {
+        margin: 0;
+        font: 400 clamp(18px, 2vw, 22px)/1.85 var(--display);
+        white-space: pre-line;
+      }
+      .reflection.is-collapsed {
+        max-height: 12.95em;
+        overflow: hidden;
+      }
+      .reflection.is-collapsed::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 28px;
+        bottom: 0;
+        height: 4em;
+        background: linear-gradient(transparent, var(--white));
+        pointer-events: none;
+      }
+      .expand-button {
+        margin-top: 17px;
+        padding: 7px 0;
+        color: var(--blue);
+        background: transparent;
+        border: 0;
+        border-bottom: 1px solid currentColor;
+        cursor: pointer;
+        font: 11px/1 var(--utility);
+      }
+
+      .empty {
+        display: none;
+        padding: 46px;
+        text-align: center;
+        border: 1px solid var(--line);
+        background: var(--white);
+      }
+      .empty.is-visible {
+        display: block;
+      }
+
+      .page-footer {
+        padding: 40px 20px;
+        color: #cbd3e8;
+        background: var(--ink);
+        text-align: center;
+        font: 11px/1.8 var(--utility);
+      }
+      .page-footer a {
+        color: var(--yellow);
+        text-underline-offset: 4px;
+      }
+
+      :focus-visible {
+        outline: 3px solid var(--yellow);
+        outline-offset: 3px;
+      }
+
+      @media (max-width: 800px) {
+        .hero {
+          grid-template-columns: 1fr;
+          padding-top: 48px;
+        }
+        .archive-stamp {
+          max-width: 270px;
+        }
+        .ledger {
+          grid-template-columns: 1fr;
+        }
+        .archive-heading {
+          align-items: start;
+          flex-direction: column;
+        }
+        .archive-heading p {
+          text-align: left;
+        }
+        .control-row {
+          align-items: stretch;
+        }
+        .search-wrap {
+          flex-basis: 190px;
+        }
+        .year-group {
+          grid-template-columns: 1fr;
+          gap: 18px;
+        }
+        .year-mark {
+          position: static;
+        }
+        .year-mark::after {
+          width: 100%;
+          height: 1px;
+          margin-top: 10px;
+          background: var(--line);
+        }
+        .reel {
+          grid-auto-columns: minmax(300px, 82vw);
+        }
+      }
+
+      @media (max-width: 520px) {
+        .topbar {
+          width: min(100% - 28px, 1180px);
+        }
+        .topbar span {
+          display: none;
+        }
+        .hero,
+        main,
+        .reel-label {
+          width: min(100% - 28px, 1180px);
+        }
+        h1 {
+          font-size: 64px;
+        }
+        .notes::before {
+          left: 6px;
+        }
+        .note {
+          margin-left: 26px;
+          padding-left: 16px;
+        }
+        .note::before {
+          left: -35px;
+        }
+        .note-head {
+          grid-template-columns: 1fr;
+          gap: 4px;
+        }
+        .message-link {
+          justify-self: start;
+        }
+        .reflection-wrap {
+          padding-right: 18px;
+        }
+        .reflection.is-collapsed::after {
+          right: 18px;
+        }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .frame,
+        .note {
+          animation: arrive 0.45s both;
+          animation-delay: calc(var(--order, 0) * 35ms);
+        }
+        @keyframes arrive {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      }
+
+      @media print {
+        .masthead {
+          color: var(--ink);
+          background: var(--white);
+          border-bottom-color: var(--ink);
+        }
+        .topbar,
+        .reel-wrap,
+        .controls,
+        .expand-button {
+          display: none !important;
+        }
+        .hero {
+          display: block;
+          padding: 30px 0;
+        }
+        h1 {
+          font-size: 64px;
+        }
+        .hero-deck {
+          color: var(--ink);
+        }
+        .archive-stamp {
+          margin-top: 24px;
+          box-shadow: none;
+          border-color: var(--ink);
+        }
+        .archive-stamp strong {
+          color: var(--ink);
+        }
+        .year-mark {
+          position: static;
+        }
+        .note {
+          break-inside: avoid;
+          box-shadow: none;
+        }
+        .reflection.is-collapsed {
+          max-height: none;
+        }
+        .reflection.is-collapsed::after {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#archive">跳到阅览记录</a>
+
+    <header class="masthead">
+      <div class="topbar">
+        <a href="../index.html">← FUN DATA RESEARCH</a>
+        <span id="date-range"></span>
+      </div>
+      <div class="hero">
+        <div>
+          <p class="kicker">Reading & viewing diary</p>
+          <h1>读过，<br />也看过</h1>
+          <p class="hero-deck">
+            不是评分表，也不是推荐榜。这里只保留作品碰到生活时，你当时写下来的那部分。
+          </p>
+        </div>
+        <div class="archive-stamp" aria-label="档案摘录数量">
+          <strong id="entry-count">—</strong>
+          <span>条原话摘录<br />纯收藏不计入</span>
+        </div>
+      </div>
+      <div class="reel-wrap">
+        <p class="reel-label">SELECTED FRAMES / 横向滑动</p>
+        <div class="reel" id="reel" aria-label="精选感悟"></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="ledger" aria-labelledby="method-title">
+        <div>
+          <h2 id="method-title">先辨认原话，<br />再谈作品。</h2>
+          <p class="ledger-copy" id="method-copy"></p>
+        </div>
+        <dl class="facts" id="facts"></dl>
+      </section>
+
+      <section
+        class="archive-section"
+        id="archive"
+        aria-labelledby="archive-title"
+      >
+        <div class="archive-heading">
+          <h2 id="archive-title">阅览切片</h2>
+          <p><span id="visible-count">—</span> 条记录<br />默认从早到晚</p>
+        </div>
+
+        <div class="controls" aria-label="筛选阅览记录">
+          <div class="control-row" id="controls">
+            <button
+              class="filter-button"
+              type="button"
+              data-medium="全部"
+              aria-pressed="true"
+            >
+              全部
+            </button>
+            <button
+              class="filter-button"
+              type="button"
+              data-medium="书"
+              aria-pressed="false"
+            >
+              书
+            </button>
+            <button
+              class="filter-button"
+              type="button"
+              data-medium="电影"
+              aria-pressed="false"
+            >
+              电影
+            </button>
+            <button
+              class="filter-button"
+              type="button"
+              data-medium="番剧"
+              aria-pressed="false"
+            >
+              番剧
+            </button>
+            <button
+              class="filter-button"
+              type="button"
+              data-medium="电视剧"
+              aria-pressed="false"
+            >
+              电视剧
+            </button>
+            <button
+              class="filter-button"
+              type="button"
+              data-medium="纪录片"
+              aria-pressed="false"
+            >
+              纪录片
+            </button>
+            <button
+              class="filter-button"
+              type="button"
+              data-medium="阅读随记"
+              aria-pressed="false"
+            >
+              阅读随记
+            </button>
+            <span class="control-spacer"></span>
+            <button class="sort-button" id="sort-button" type="button">
+              切到最新优先
+            </button>
+            <label class="search-wrap">
+              <span hidden>搜索作品或原话</span>
+              <input id="search" type="search" placeholder="搜索作品或原话" />
+            </label>
+          </div>
+        </div>
+
+        <div id="timeline" aria-live="polite"></div>
+        <div class="empty" id="empty">
+          没有符合当前条件的记录。换一个媒介，或清空搜索词。
+        </div>
+      </section>
+    </main>
+
+    <footer class="page-footer">
+      <p>内容来自 Telegram 导出；页面只做摘录与编排，不替原话补充结论。</p>
+      <p><a href="../index.html">返回统一入口</a></p>
+    </footer>
+
+    <script id="report-data" type="application/json">
+      {
+        "meta": {
+          "title": "读过，也看过",
+          "subtitle": "一份由原话构成的私人阅览档案",
+          "generated_at": "2026-08-13T20:30:30+08:00",
+          "source_name": "维兰的存储间",
+          "source_tagged_messages": 272,
+          "selected_entries": 80,
+          "works": 70,
+          "date_from": "2023-04-18",
+          "date_to": "2026-08-12",
+          "method": "只摘取明确属于本人感受的段落；去掉标签、链接和 Telegram blockquote，不改写原句。纯收藏、待看和无感悟链接不进入正文。"
+        },
+        "counts": {
+          "medium": {
+            "电影": 13,
+            "电视剧": 4,
+            "番剧": 15,
+            "纪录片": 1,
+            "书": 46,
+            "阅读随记": 1
+          },
+          "status": {
+            "看完": 26,
+            "在看": 4,
+            "读完": 22,
+            "在读": 15,
+            "随记": 7,
+            "弃读": 3,
+            "弃看": 2,
+            "重看": 1
+          },
+          "year": { "2023": 15, "2024": 24, "2025": 22, "2026": 19 }
+        },
+        "entries": [
+          {
+            "id": 129,
+            "title": "爆裂鼓手",
+            "medium": "电影",
+            "status": "看完",
+            "featured": true,
+            "max_paragraphs": 6,
+            "date": "2023-04-18",
+            "year": 2023,
+            "date_label": "2023.04.18",
+            "paragraphs": [
+              "看了《爆裂鼓手》，评价：不值得观看，除非你想看傻逼",
+              "这老师就是一个 大傻逼！ 这类老师的共同之处就是不喜欢说直白的话，反而是用大量的鼻孔呼吸声、脚步声在学生面前晃来晃去，影响学生的注意力，不得不以弱者的姿态应对他，把所有的问题归结于学生自身。 并且喜欢窥视学生的弱点，偶尔对学生展现出来的善意也是猫哭耗子假慈悲。 他能出名的唯一原因就是学生们都能承受住他的pua，要是有个暴躁的他早就知道收敛了",
+              "*或许这类老师还有个共同点就是脸部皮肤松弛，喜欢装严肃，笑起来也很恐怖",
+              "很后悔以前在面对这种傻逼的时候没能以正确的方法应对。"
+            ],
+            "excerpt": "看了《爆裂鼓手》，评价：不值得观看，除非你想看傻逼\n\n这老师就是一个 大傻逼！ 这类老师的共同之处就是不喜欢说直白的话，反而是用大量的鼻孔呼吸声、脚步声在学生面前晃来晃去，影响学生的注意力，不得不以弱者的姿态应对他，把所有的问题归结于学生自身。 并且喜欢窥视学生的弱点，偶尔对学生展现出来的善意也是猫哭耗子假慈悲。 他能出名的唯一原因就是学生们都能承受住他的pua，要是有个暴躁的他早就知道收敛了\n\n*或许这类老师还有个共同点就是脸部皮肤松弛，喜欢装严肃，笑起来也很恐怖\n\n很后悔以前在面对这种傻逼的时候没能以正确的方法应对。",
+            "message_url": "https://t.me/bookshelf_in_storageroom/129",
+            "reference_url": ""
+          },
+          {
+            "id": 480,
+            "title": "初恋",
+            "medium": "电视剧",
+            "status": "在看",
+            "max_paragraphs": 3,
+            "date": "2023-07-04",
+            "year": 2023,
+            "date_label": "2023.07.04",
+            "paragraphs": [
+              "在看日剧《初恋》，才看了两集，给我的感觉是画面的色彩很好，剧情也不错，配乐也很好 不过在看到一些情节还是会感觉尴尬，大概是我没有发展过或者尝试发展过亲密的关系吧，或许谈过恋爱看的这部剧会更有沉浸感？还有一种可能是这种自由释放出来的情绪对我的刺激太大了，我的日常生活非常平淡，精神刺激主要来源自区块链骗局，或许应该多出门和人交流。"
+            ],
+            "excerpt": "在看日剧《初恋》，才看了两集，给我的感觉是画面的色彩很好，剧情也不错，配乐也很好 不过在看到一些情节还是会感觉尴尬，大概是我没有发展过或者尝试发展过亲密的关系吧，或许谈过恋爱看的这部剧会更有沉浸感？还有一种可能是这种自由释放出来的情绪对我的刺激太大了，我的日常生活非常平淡，精神刺激主要来源自区块链骗局，或许应该多出门和人交流。",
+            "message_url": "https://t.me/bookshelf_in_storageroom/480",
+            "reference_url": ""
+          },
+          {
+            "id": 512,
+            "title": "刀剑神域：序列之争",
+            "medium": "番剧",
+            "status": "看完",
+            "max_paragraphs": 3,
+            "date": "2023-07-10",
+            "year": 2023,
+            "date_label": "2023.07.10",
+            "paragraphs": [
+              "看了《刀剑神域：序列之争》 剧情逻辑有硬伤（也有可能是我不知道的背景知识，我看b站的评论里有解释一些） 能吐槽的地方太多了... 不考虑剧情的话还能看，最后的战斗很爽，总之又是桐人拯救大家的故事"
+            ],
+            "excerpt": "看了《刀剑神域：序列之争》 剧情逻辑有硬伤（也有可能是我不知道的背景知识，我看b站的评论里有解释一些） 能吐槽的地方太多了... 不考虑剧情的话还能看，最后的战斗很爽，总之又是桐人拯救大家的故事",
+            "message_url": "https://t.me/bookshelf_in_storageroom/512",
+            "reference_url": ""
+          },
+          {
+            "id": 553,
+            "title": "音乐纪录片",
+            "medium": "纪录片",
+            "status": "在看",
+            "max_paragraphs": 3,
+            "date": "2023-07-13",
+            "year": 2023,
+            "date_label": "2023.07.13",
+            "paragraphs": [
+              "提升频道艺术浓度，我刚看了一集感觉挺有意思的（虽然我连五线谱都不会认 而且内容质量很高，并不枯燥，大师的从容感扑面而来"
+            ],
+            "excerpt": "提升频道艺术浓度，我刚看了一集感觉挺有意思的（虽然我连五线谱都不会认 而且内容质量很高，并不枯燥，大师的从容感扑面而来",
+            "message_url": "https://t.me/bookshelf_in_storageroom/553",
+            "reference_url": "https://www.bilibili.com/video/BV1tJ411r7gh/"
+          },
+          {
+            "id": 693,
+            "title": "夏日幽灵",
+            "medium": "番剧",
+            "status": "看完",
+            "max_paragraphs": 2,
+            "date": "2023-07-25",
+            "year": 2023,
+            "date_label": "2023.07.25",
+            "paragraphs": [
+              "《夏日幽灵》 很完整的40分钟短片，画面和音乐很棒，剧情也写得挺好，有治愈有致郁，推荐！"
+            ],
+            "excerpt": "《夏日幽灵》 很完整的40分钟短片，画面和音乐很棒，剧情也写得挺好，有治愈有致郁，推荐！",
+            "message_url": "https://t.me/bookshelf_in_storageroom/693",
+            "reference_url": "https://movie.douban.com/subject/35368245/"
+          },
+          {
+            "id": 858,
+            "title": "蜘蛛侠：纵横宇宙",
+            "medium": "电影",
+            "status": "看完",
+            "max_paragraphs": 3,
+            "date": "2023-08-13",
+            "year": 2023,
+            "date_label": "2023.08.13",
+            "paragraphs": [
+              "看了《蜘蛛侠：纵横宇宙》，这部剧的人物对话展示出来的情感没有让我感到尴尬的部分，太棒了这个 前一部分的爱与思念，后面的不得不选择的牺牲、朋友的背叛与不理解还有其他的让我对第三部非常期待（这三部值得用一下午的时间都看一遍） 虽然没支持电影票，但是打算看看有什么电影周边支持一下"
+            ],
+            "excerpt": "看了《蜘蛛侠：纵横宇宙》，这部剧的人物对话展示出来的情感没有让我感到尴尬的部分，太棒了这个 前一部分的爱与思念，后面的不得不选择的牺牲、朋友的背叛与不理解还有其他的让我对第三部非常期待（这三部值得用一下午的时间都看一遍） 虽然没支持电影票，但是打算看看有什么电影周边支持一下",
+            "message_url": "https://t.me/bookshelf_in_storageroom/858",
+            "reference_url": ""
+          },
+          {
+            "id": 1467,
+            "title": "我讨厌韩国",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 5,
+            "date": "2023-10-05",
+            "year": 2023,
+            "date_label": "2023.10.05",
+            "paragraphs": [
+              "书看完了，故事讲的一般，不过写的很流畅，有距离感，毕竟我也没有国外生活的经验",
+              "里面的一些人物形象倒是也能套在中国当前的环境上，用网络上的形象总结的话有润人，神/兔，普通人等",
+              "让我总结这个主人公的特点的话，大概就是对宏大叙事没感觉，更关心自己的快乐以及未来的发展；思维有条理，有执行力；没有当人上人的想法，想得到尊重",
+              "读了之后没啥感想，类似的想法以前就在知乎上刷到过，赞同的人还挺多的 总的来说，没事的时候可以看看，毕竟才200页"
+            ],
+            "excerpt": "书看完了，故事讲的一般，不过写的很流畅，有距离感，毕竟我也没有国外生活的经验\n\n里面的一些人物形象倒是也能套在中国当前的环境上，用网络上的形象总结的话有润人，神/兔，普通人等\n\n让我总结这个主人公的特点的话，大概就是对宏大叙事没感觉，更关心自己的快乐以及未来的发展；思维有条理，有执行力；没有当人上人的想法，想得到尊重\n\n读了之后没啥感想，类似的想法以前就在知乎上刷到过，赞同的人还挺多的 总的来说，没事的时候可以看看，毕竟才200页",
+            "message_url": "https://t.me/bookshelf_in_storageroom/1467",
+            "reference_url": ""
+          },
+          {
+            "id": 1516,
+            "title": "平滑世界和它的敌人",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 5,
+            "date": "2023-10-09",
+            "year": 2023,
+            "date_label": "2023.10.09",
+            "paragraphs": [
+              "读了《平滑世界和它的敌人》",
+              "一个短篇科幻，设定上挺有趣的：每个人的“灵魂”都可以自由穿梭在不同世界的自己身上，选择自己想过的生活，所以每个人的可能性都是无穷的。 但是有些人无法进行穿梭，也就是有“乘觉障碍”，他们的人生没有无限选择，被困在了单独的世界里。",
+              "故事发生在一个因故患上乘觉障碍的人和她的正常朋友“我”身上，经历了一些事情之后，“我”主动接触药物，患上乘觉障碍，然后和她处于相同的世界，大概就是这么一回事。",
+              "我有些不能理解，因为书里说了有些世界是存在解决乘觉障碍的方法的，只不过因为知识水平的原因无法搬运回这个世界，完全可以继续找方法直到解决这种病嘛，干嘛要自断后路呢？不过又想到他们的家人朋友都是正常的，也可以帮他们解决这个问题，而且书里说了这是一个无限可能的世界，总之就当他们在玩一种新的游戏好了。",
+              "评价：完整的故事，可以看看"
+            ],
+            "excerpt": "读了《平滑世界和它的敌人》\n\n一个短篇科幻，设定上挺有趣的：每个人的“灵魂”都可以自由穿梭在不同世界的自己身上，选择自己想过的生活，所以每个人的可能性都是无穷的。 但是有些人无法进行穿梭，也就是有“乘觉障碍”，他们的人生没有无限选择，被困在了单独的世界里。\n\n故事发生在一个因故患上乘觉障碍的人和她的正常朋友“我”身上，经历了一些事情之后，“我”主动接触药物，患上乘觉障碍，然后和她处于相同的世界，大概就是这么一回事。\n\n我有些不能理解，因为书里说了有些世界是存在解决乘觉障碍的方法的，只不过因为知识水平的原因无法搬运回这个世界，完全可以继续找方法直到解决这种病嘛，干嘛要自断后路呢？不过又想到他们的家人朋友都是正常的，也可以帮他们解决这个问题，而且书里说了这是一个无限可能的世界，总之就当他们在玩一种新的游戏好了。\n\n评价：完整的故事，可以看看",
+            "message_url": "https://t.me/bookshelf_in_storageroom/1516",
+            "reference_url": ""
+          },
+          {
+            "id": 1677,
+            "title": "恋人絮语",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 3,
+            "date": "2023-10-20",
+            "year": 2023,
+            "date_label": "2023.10.20",
+            "paragraphs": [
+              "『恋人絮语』我读起来感觉没什么「内容」，它是作者的一段段思绪，读起来有「是的，我也是这么想的」这种想法",
+              "这本书还和『少年维特的烦恼』有关，不过我没读过",
+              "适合没事的时候看几段"
+            ],
+            "excerpt": "『恋人絮语』我读起来感觉没什么「内容」，它是作者的一段段思绪，读起来有「是的，我也是这么想的」这种想法\n\n这本书还和『少年维特的烦恼』有关，不过我没读过\n\n适合没事的时候看几段",
+            "message_url": "https://t.me/bookshelf_in_storageroom/1677",
+            "reference_url": ""
+          },
+          {
+            "id": 1881,
+            "title": "世界在你心中",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 2,
+            "date": "2023-11-03",
+            "year": 2023,
+            "date_label": "2023.11.03",
+            "paragraphs": [
+              "我开始读了克里希那穆提的『世界在你心中』 书中的某些想法我过去也曾想过，有些内容读起来相当顺滑，有些内容读起来就很混乱：我可能需要后面的内容才能理解前面那段话在说什么，还有一些感觉他在玩言语上的循环论证，我无法理解这部分内容",
+              "以上仅仅是读了第一章的感受，剩余的还得等我读了再说 （微信读书里面就有他的这本书，好像还有很多他的书，感兴趣可以去看看"
+            ],
+            "excerpt": "我开始读了克里希那穆提的『世界在你心中』 书中的某些想法我过去也曾想过，有些内容读起来相当顺滑，有些内容读起来就很混乱：我可能需要后面的内容才能理解前面那段话在说什么，还有一些感觉他在玩言语上的循环论证，我无法理解这部分内容\n\n以上仅仅是读了第一章的感受，剩余的还得等我读了再说 （微信读书里面就有他的这本书，好像还有很多他的书，感兴趣可以去看看",
+            "message_url": "https://t.me/bookshelf_in_storageroom/1881",
+            "reference_url": ""
+          },
+          {
+            "id": 1904,
+            "title": "BanG Dream! It's MyGO!!!!!",
+            "medium": "番剧",
+            "status": "看完",
+            "max_paragraphs": 2,
+            "date": "2023-11-05",
+            "year": 2023,
+            "date_label": "2023.11.05",
+            "paragraphs": [
+              "it's mygo 看完了，画面一流，音乐也一流，剧情前半段进展有点缓慢，但是后面快的像跳楼",
+              "推荐观看！（为什么十三集就结束了！后面的呢！）"
+            ],
+            "excerpt": "it's mygo 看完了，画面一流，音乐也一流，剧情前半段进展有点缓慢，但是后面快的像跳楼\n\n推荐观看！（为什么十三集就结束了！后面的呢！）",
+            "message_url": "https://t.me/bookshelf_in_storageroom/1904",
+            "reference_url": ""
+          },
+          {
+            "id": 1927,
+            "title": "沧浪之水",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 2,
+            "date": "2023-11-06",
+            "year": 2023,
+            "date_label": "2023.11.06",
+            "paragraphs": [
+              "微信读书上看到了「沧浪之水」这本书，于是去读读 老实说这种类型的书我并不喜欢甚至很讨厌，不过这本书写的很流畅，把人物刻画的很好（或者说人物都是自带刻板印象的，读者能对这个人要做什么有个推测） 我现在才看了大概七分之一，大概两周能看完，推荐大伙有兴趣的可以看一下（至于克里希那穆提，等我有闲了再看吧x）"
+            ],
+            "excerpt": "微信读书上看到了「沧浪之水」这本书，于是去读读 老实说这种类型的书我并不喜欢甚至很讨厌，不过这本书写的很流畅，把人物刻画的很好（或者说人物都是自带刻板印象的，读者能对这个人要做什么有个推测） 我现在才看了大概七分之一，大概两周能看完，推荐大伙有兴趣的可以看一下（至于克里希那穆提，等我有闲了再看吧x）",
+            "message_url": "https://t.me/bookshelf_in_storageroom/1927",
+            "reference_url": ""
+          },
+          {
+            "id": 1928,
+            "title": "沧浪之水",
+            "medium": "书",
+            "status": "随记",
+            "max_paragraphs": 4,
+            "date": "2023-11-06",
+            "year": 2023,
+            "date_label": "2023.11.06",
+            "paragraphs": [
+              "下面这段是主角对于什么是自己的疑问。主角此时还有点“清高”，觉得带着其他目的去接触别人不是“君子”，即便最后的结果是两方都受益的，坚持“论心不论迹”，不管怎么样初心一定要好。",
+              "有段时间我也对什么才能保障自己灵魂的纯洁性不受污染而惶恐，我害怕做了一些事情之后我的灵魂会发生不可逆转的变化，即便我的肉体还是原本那个。",
+              "走在命运的分叉路口，这时候有外力告诉我右边十几米有一条新路线，我如果去走了的话，那么那条路上的我和十字路口的我还是一个人吗？",
+              "当时我的世界观很奇葩（所以不能跟精神病人讲逻辑），我真的在为自己的灵魂有没有被污染而和看不见的精神怪物搏斗（要是我信教的话可能会是一个虔诚级别的信徒？）"
+            ],
+            "excerpt": "下面这段是主角对于什么是自己的疑问。主角此时还有点“清高”，觉得带着其他目的去接触别人不是“君子”，即便最后的结果是两方都受益的，坚持“论心不论迹”，不管怎么样初心一定要好。\n\n有段时间我也对什么才能保障自己灵魂的纯洁性不受污染而惶恐，我害怕做了一些事情之后我的灵魂会发生不可逆转的变化，即便我的肉体还是原本那个。\n\n走在命运的分叉路口，这时候有外力告诉我右边十几米有一条新路线，我如果去走了的话，那么那条路上的我和十字路口的我还是一个人吗？\n\n当时我的世界观很奇葩（所以不能跟精神病人讲逻辑），我真的在为自己的灵魂有没有被污染而和看不见的精神怪物搏斗（要是我信教的话可能会是一个虔诚级别的信徒？）",
+            "message_url": "https://t.me/bookshelf_in_storageroom/1928",
+            "reference_url": ""
+          },
+          {
+            "id": 2028,
+            "title": "BLUE GIANT／蓝色巨人",
+            "medium": "番剧",
+            "status": "看完",
+            "featured": true,
+            "max_paragraphs": 6,
+            "date": "2023-11-14",
+            "year": 2023,
+            "date_label": "2023.11.14",
+            "paragraphs": [
+              "看了『BLUE GIANT（蓝色巨人） 』 也是一部有关乐队追梦的动漫片，时长两个小时",
+              "男主是个乐观派，无论什么时候都充满活力的那种，钢琴手技术很好，但是困于没找到自己的“道”，鼓手从零基础一直成长到能够登上顶级舞台，这其中男主的鼓励必不可少（这让我想到了以前看的那部傻*『爆裂鼓手』，在这里再骂一次）",
+              "整部片的画面没什么缺点，而且会在进行音乐表演的时候转换成三渲二，细节很丰富，镜头很晃很爽，而且进行了一些艺术化改造，总之很好看就是了",
+              "有关剧中的音乐部分，因为男主吹的是萨克斯我之前几乎没怎么听过，所以男主给钢琴手炫技的时候我还以为他要被钢琴手羞辱了，因为我听起来真的感觉很难听（x 不过三人一起演奏时的音乐都很好，配合画面能够感受到那种激情",
+              "（后面的演奏舍不得停下来截图，然后看完又懒得回去截了，所以只留下这三张）",
+              "总之，推荐观看！"
+            ],
+            "excerpt": "看了『BLUE GIANT（蓝色巨人） 』 也是一部有关乐队追梦的动漫片，时长两个小时\n\n男主是个乐观派，无论什么时候都充满活力的那种，钢琴手技术很好，但是困于没找到自己的“道”，鼓手从零基础一直成长到能够登上顶级舞台，这其中男主的鼓励必不可少（这让我想到了以前看的那部傻*『爆裂鼓手』，在这里再骂一次）\n\n整部片的画面没什么缺点，而且会在进行音乐表演的时候转换成三渲二，细节很丰富，镜头很晃很爽，而且进行了一些艺术化改造，总之很好看就是了\n\n有关剧中的音乐部分，因为男主吹的是萨克斯我之前几乎没怎么听过，所以男主给钢琴手炫技的时候我还以为他要被钢琴手羞辱了，因为我听起来真的感觉很难听（x 不过三人一起演奏时的音乐都很好，配合画面能够感受到那种激情\n\n（后面的演奏舍不得停下来截图，然后看完又懒得回去截了，所以只留下这三张）\n\n总之，推荐观看！",
+            "message_url": "https://t.me/bookshelf_in_storageroom/2028",
+            "reference_url": ""
+          },
+          {
+            "id": 2512,
+            "title": "Taylor Swift：时代巡回演唱会",
+            "medium": "电影",
+            "status": "看完",
+            "max_paragraphs": 2,
+            "date": "2023-12-30",
+            "year": 2023,
+            "date_label": "2023.12.30",
+            "paragraphs": [
+              "找了 泰勒斯威夫特 时代巡回演唱会 看 效果好棒 —— 差不多看完了，感觉没啥意思...不是粉丝的话似乎有点折磨..."
+            ],
+            "excerpt": "找了 泰勒斯威夫特 时代巡回演唱会 看 效果好棒 —— 差不多看完了，感觉没啥意思...不是粉丝的话似乎有点折磨...",
+            "message_url": "https://t.me/bookshelf_in_storageroom/2512",
+            "reference_url": ""
+          },
+          {
+            "id": 2719,
+            "title": "Approaching (Almost) Any Machine Learning Problem",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 6,
+            "date": "2024-01-20",
+            "year": 2024,
+            "date_label": "2024.01.20",
+            "paragraphs": [
+              "Approaching (Almost) Any Machine Learning Problem 大概看完了",
+              "这本书我认为比较适合机器学习初学者，在学完一些理论后看这个上手解决一些问题 它所谓的解决几乎所有问题，指的是把一些基本的流程告诉你，你可以照着这个流水线去解决问题：处理数据，构造模型，训练，然后就可以拿金牌啦",
+              "但是具体的细节它一点也没说，该怎么搭建一个合适的模型？书里只用到了预训练好的模型resnet之类的（虽然很多时候这些玩意确实够用了，但是拿金牌肯定是不够的）",
+              "总之相当于一份比较详细的模板吧，给了一份标准的模板，但是应用到每个问题上做的修改还是得你自己慢慢摸索，这本书里不存在什么作弊秘籍",
+              "书的最后两章讲的是实际部署中的东西，感觉没啥意思，特别是最后的用docker+flask部署，完全可以替换成抱抱脸的网站+gradio，方便还好用（在我看来）"
+            ],
+            "excerpt": "Approaching (Almost) Any Machine Learning Problem 大概看完了\n\n这本书我认为比较适合机器学习初学者，在学完一些理论后看这个上手解决一些问题 它所谓的解决几乎所有问题，指的是把一些基本的流程告诉你，你可以照着这个流水线去解决问题：处理数据，构造模型，训练，然后就可以拿金牌啦\n\n但是具体的细节它一点也没说，该怎么搭建一个合适的模型？书里只用到了预训练好的模型resnet之类的（虽然很多时候这些玩意确实够用了，但是拿金牌肯定是不够的）\n\n总之相当于一份比较详细的模板吧，给了一份标准的模板，但是应用到每个问题上做的修改还是得你自己慢慢摸索，这本书里不存在什么作弊秘籍\n\n书的最后两章讲的是实际部署中的东西，感觉没啥意思，特别是最后的用docker+flask部署，完全可以替换成抱抱脸的网站+gradio，方便还好用（在我看来）",
+            "message_url": "https://t.me/bookshelf_in_storageroom/2719",
+            "reference_url": ""
+          },
+          {
+            "id": 2840,
+            "title": "人道主义吸血鬼征自杀志愿者",
+            "medium": "电影",
+            "status": "看完",
+            "max_paragraphs": 5,
+            "date": "2024-02-02",
+            "year": 2024,
+            "date_label": "2024.02.02",
+            "paragraphs": [
+              "在看 人道主义吸血鬼在寻找自杀自愿者 具体的剧情还没了解不过从画面上看小时候的女主好可爱 这女主要是当个虚拟主播能有一大帮人心甘情愿的给她血喝",
+              "看完了！ 作为一个半小时的电影质量还不错，剧情有点小缺憾然后就没啥了 推荐感兴趣的看看 这部剧主要讲的其实是男主和女主推翻旧吸血鬼体制，在新的生产关系里，联合人类创造共赢的事情"
+            ],
+            "excerpt": "在看 人道主义吸血鬼在寻找自杀自愿者 具体的剧情还没了解不过从画面上看小时候的女主好可爱 这女主要是当个虚拟主播能有一大帮人心甘情愿的给她血喝\n\n看完了！ 作为一个半小时的电影质量还不错，剧情有点小缺憾然后就没啥了 推荐感兴趣的看看 这部剧主要讲的其实是男主和女主推翻旧吸血鬼体制，在新的生产关系里，联合人类创造共赢的事情",
+            "message_url": "https://t.me/bookshelf_in_storageroom/2840",
+            "reference_url": "https://weibo.com/6028015551/4982637165019279"
+          },
+          {
+            "id": 3016,
+            "title": "小市民系列：春季限定草莓挞事件",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 6,
+            "date": "2024-02-17",
+            "year": 2024,
+            "date_label": "2024.02.17",
+            "paragraphs": [
+              "今天读完了一本小说《小市民系列：春季限定草莓挞事件》 这本书的作者另一部出名的作品是《冰菓》，我也是看到这个系列要出番剧的预告才买回来看的",
+              "这本书的腰封宣传语是“继“冰菓”系列之后 又一青春校园推理力作”，但是书中推理的部分，给我的感觉就是：",
+              "现在需要找到四个数字让它们的和为1，而已经有两个数字是确定的，1和2，还有两个空怎么解决呢？就算是全填零也不对啊 对了，数学上还有负数这一概念，我们填上一个0和一个-2就能解决问题了",
+              "就是这种感觉",
+              "至于男女主之间的情感，因为整个系列有好几本，这本属于第一本，所以没有什么很明显的场面，两个人也都认为他们并没有在谈恋爱，而是一种“同盟，互相掩护，各取所需，互惠互利”的关系",
+              "和网文比最大优点在于故事的完整性吧（相比网文一本完整订阅几十块的，还算便宜），总之可以读，但是等番剧出来直接看会比较好 如果有空了我会把剩下的几本读读"
+            ],
+            "excerpt": "今天读完了一本小说《小市民系列：春季限定草莓挞事件》 这本书的作者另一部出名的作品是《冰菓》，我也是看到这个系列要出番剧的预告才买回来看的\n\n这本书的腰封宣传语是“继“冰菓”系列之后 又一青春校园推理力作”，但是书中推理的部分，给我的感觉就是：\n\n现在需要找到四个数字让它们的和为1，而已经有两个数字是确定的，1和2，还有两个空怎么解决呢？就算是全填零也不对啊 对了，数学上还有负数这一概念，我们填上一个0和一个-2就能解决问题了\n\n就是这种感觉\n\n至于男女主之间的情感，因为整个系列有好几本，这本属于第一本，所以没有什么很明显的场面，两个人也都认为他们并没有在谈恋爱，而是一种“同盟，互相掩护，各取所需，互惠互利”的关系\n\n和网文比最大优点在于故事的完整性吧（相比网文一本完整订阅几十块的，还算便宜），总之可以读，但是等番剧出来直接看会比较好 如果有空了我会把剩下的几本读读",
+            "message_url": "https://t.me/bookshelf_in_storageroom/3016",
+            "reference_url": ""
+          },
+          {
+            "id": 3104,
+            "title": "通往夏天的隧道，再见的出口",
+            "medium": "书",
+            "status": "读完",
+            "featured": true,
+            "max_paragraphs": 5,
+            "date": "2024-02-25",
+            "year": 2024,
+            "date_label": "2024.02.25",
+            "paragraphs": [
+              "这两天在火车上读完了这本书：《通往夏天的隧道，再见的出口》",
+              "这本书给我的感觉比上一本小说强很多，女主从东京转学到小地方遇到男主，天降系开局 两个人因为某个事件开始有了联系，从同班的陌生人变成了守护同一个秘密的朋友，然后自然而然的过渡到恋人，书中倒是没有两个人直球告白的场面（话说我一直觉得告白好尴尬，可能是因为我还没有喜欢的人吧x），两情相悦真好啊真好啊真好啊☺️",
+              "这本书还有个剧版改编，我还没看，因为火车上的时间其实并没有我想象的那么多，这次火车上的旅途还算可以，如果同卧铺的人没打呼噜就更好了",
+              "在看书的时候我似乎还有点什么想说的，但是现在忘掉了，既然能忘掉那估计不是什么重要的事情吧",
+              "我现在呆在宿舍里，尽管开着空调但是还是又湿又冷 我也想握住某个人的手，拥抱她，感受她身体的温度（要是这样能让我暖起来就好了） 这在现实里怕是无法完成了，希望梦里可以看到她"
+            ],
+            "excerpt": "这两天在火车上读完了这本书：《通往夏天的隧道，再见的出口》\n\n这本书给我的感觉比上一本小说强很多，女主从东京转学到小地方遇到男主，天降系开局 两个人因为某个事件开始有了联系，从同班的陌生人变成了守护同一个秘密的朋友，然后自然而然的过渡到恋人，书中倒是没有两个人直球告白的场面（话说我一直觉得告白好尴尬，可能是因为我还没有喜欢的人吧x），两情相悦真好啊真好啊真好啊☺️\n\n这本书还有个剧版改编，我还没看，因为火车上的时间其实并没有我想象的那么多，这次火车上的旅途还算可以，如果同卧铺的人没打呼噜就更好了\n\n在看书的时候我似乎还有点什么想说的，但是现在忘掉了，既然能忘掉那估计不是什么重要的事情吧\n\n我现在呆在宿舍里，尽管开着空调但是还是又湿又冷 我也想握住某个人的手，拥抱她，感受她身体的温度（要是这样能让我暖起来就好了） 这在现实里怕是无法完成了，希望梦里可以看到她",
+            "message_url": "https://t.me/bookshelf_in_storageroom/3104",
+            "reference_url": ""
+          },
+          {
+            "id": 3237,
+            "title": "三小时快学期权",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 4,
+            "date": "2024-03-10",
+            "year": 2024,
+            "date_label": "2024.03.10",
+            "paragraphs": [
+              "《三小时快学期权》看的差不多了，虽然名字是三个小时，但是我花了两个上午（不知道干啥的思政课）以及一些其他的时间",
+              "这本书算是讲期权如何“交易”的，以及一些简单的策略以及其后果 举了一些例子让读者更容易理解这些策略是如何获利的 它没有讲期权是如何定价的，最复杂的数学内容也就是加减乘除 总的来说算是一本科普书",
+              "书中多次强调的是“对未来的预期”，似乎作者默认使用期权的人都对市场有着自己的理解 对于期权交易者来说，对市场判断越精准越能获利，所有人都知道未来的某一天btc会站上10w，但是没法用这种判断获利",
+              "很不幸的是我对市场一点理解也没有，看这本书啥也没学到"
+            ],
+            "excerpt": "《三小时快学期权》看的差不多了，虽然名字是三个小时，但是我花了两个上午（不知道干啥的思政课）以及一些其他的时间\n\n这本书算是讲期权如何“交易”的，以及一些简单的策略以及其后果 举了一些例子让读者更容易理解这些策略是如何获利的 它没有讲期权是如何定价的，最复杂的数学内容也就是加减乘除 总的来说算是一本科普书\n\n书中多次强调的是“对未来的预期”，似乎作者默认使用期权的人都对市场有着自己的理解 对于期权交易者来说，对市场判断越精准越能获利，所有人都知道未来的某一天btc会站上10w，但是没法用这种判断获利\n\n很不幸的是我对市场一点理解也没有，看这本书啥也没学到",
+            "message_url": "https://t.me/bookshelf_in_storageroom/3237",
+            "reference_url": ""
+          },
+          {
+            "id": 3302,
+            "title": "幸福之路",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 4,
+            "date": "2024-03-17",
+            "year": 2024,
+            "date_label": "2024.03.17",
+            "paragraphs": [
+              "这个星期把上学期没看完的 《幸福之路》 看完了 因为书里面是按照每章一个主题进行写作的，所以续上进度没什么困难",
+              "这本书是罗素在1930年代写的书，从名字可以看出来它的主题是什么，这本书给我的感觉是很真诚，没有故弄玄虚，所有的观点都用易懂的话进行了解释，即便作为心灵鸡汤来说，也是上好的汤",
+              "非常建议大家读读，只有一百来页"
+            ],
+            "excerpt": "这个星期把上学期没看完的 《幸福之路》 看完了 因为书里面是按照每章一个主题进行写作的，所以续上进度没什么困难\n\n这本书是罗素在1930年代写的书，从名字可以看出来它的主题是什么，这本书给我的感觉是很真诚，没有故弄玄虚，所有的观点都用易懂的话进行了解释，即便作为心灵鸡汤来说，也是上好的汤\n\n非常建议大家读读，只有一百来页",
+            "message_url": "https://t.me/bookshelf_in_storageroom/3302",
+            "reference_url": "https://book.douban.com/subject/35302634/"
+          },
+          {
+            "id": 3638,
+            "title": "扩散模型从原理到实战",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 6,
+            "date": "2024-04-29",
+            "year": 2024,
+            "date_label": "2024.04.29",
+            "paragraphs": [
+              "读完了《扩散模型从原理到实战》 这本书的副标题其实应该改成：hugging face 系列库的使用",
+              "这本书主要有两个部分：扩散模型的基本概念，以及相关实战 代码片段很简洁，看了都懂，还行",
+              "可看作科普书，全文中没有讲解任何理论推导过程，只是告诉你使用hugging face库里的这个模块就可以了",
+              "虽然看起来这个库确实挺好用，但是这本书面向的应该是做产品的，而不是做研究的",
+              "一般般，不推荐做研究的读，纯路人对扩散模型感兴趣的可以读读"
+            ],
+            "excerpt": "读完了《扩散模型从原理到实战》 这本书的副标题其实应该改成：hugging face 系列库的使用\n\n这本书主要有两个部分：扩散模型的基本概念，以及相关实战 代码片段很简洁，看了都懂，还行\n\n可看作科普书，全文中没有讲解任何理论推导过程，只是告诉你使用hugging face库里的这个模块就可以了\n\n虽然看起来这个库确实挺好用，但是这本书面向的应该是做产品的，而不是做研究的\n\n一般般，不推荐做研究的读，纯路人对扩散模型感兴趣的可以读读",
+            "message_url": "https://t.me/bookshelf_in_storageroom/3638",
+            "reference_url": "https://book.douban.com/subject/36482946/"
+          },
+          {
+            "id": 3786,
+            "title": "狂热分子",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 3,
+            "date": "2024-05-13",
+            "year": 2024,
+            "date_label": "2024.05.13",
+            "paragraphs": [
+              "翻完了这本书《狂热分子》，因为不是很感兴趣所以跳了一些内容",
+              "这本书写的很好，它里面没有任何的黑话，比那些全文都是由xx主义/绝对精神/大他者这种词写成的书好一万倍"
+            ],
+            "excerpt": "翻完了这本书《狂热分子》，因为不是很感兴趣所以跳了一些内容\n\n这本书写的很好，它里面没有任何的黑话，比那些全文都是由xx主义/绝对精神/大他者这种词写成的书好一万倍",
+            "message_url": "https://t.me/bookshelf_in_storageroom/3786",
+            "reference_url": ""
+          },
+          {
+            "id": 4264,
+            "title": "仿造品和绚丽多彩的灰",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 5,
+            "date": "2024-07-01",
+            "year": 2024,
+            "date_label": "2024.07.01",
+            "paragraphs": [
+              "看完了小说《仿造品和绚丽多彩的灰》 算是半个坏结局（？",
+              "这本书的内容可以用我今天看到的一个模板来概括：",
+              "非人美少女，在经历了这么多事情之后终于理解了什么是爱，然后因为使命完成所以不得不离开地球 模板很老套，所以能不能看得下去主要和作者的笔力有关，我觉得这本书还能看得下去",
+              "不过书里面有个角色是舔狗，不同时期喜欢的两个人都喜欢女主，这种情节感觉不太行"
+            ],
+            "excerpt": "看完了小说《仿造品和绚丽多彩的灰》 算是半个坏结局（？\n\n这本书的内容可以用我今天看到的一个模板来概括：\n\n非人美少女，在经历了这么多事情之后终于理解了什么是爱，然后因为使命完成所以不得不离开地球 模板很老套，所以能不能看得下去主要和作者的笔力有关，我觉得这本书还能看得下去\n\n不过书里面有个角色是舔狗，不同时期喜欢的两个人都喜欢女主，这种情节感觉不太行",
+            "message_url": "https://t.me/bookshelf_in_storageroom/4264",
+            "reference_url": ""
+          },
+          {
+            "id": 4493,
+            "title": "局外人",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 2,
+            "date": "2024-07-22",
+            "year": 2024,
+            "date_label": "2024.07.22",
+            "paragraphs": [
+              "这两天看完了书『局外人』，大概一百页",
+              "我能读懂的东西不多，书里前半部分写了点男女关系，比如：她想知道我到底爱不爱她，或许那时候就类似“我和你妈同时落水，你会去救谁”的问题了"
+            ],
+            "excerpt": "这两天看完了书『局外人』，大概一百页\n\n我能读懂的东西不多，书里前半部分写了点男女关系，比如：她想知道我到底爱不爱她，或许那时候就类似“我和你妈同时落水，你会去救谁”的问题了",
+            "message_url": "https://t.me/bookshelf_in_storageroom/4493",
+            "reference_url": ""
+          },
+          {
+            "id": 4502,
+            "title": "败北女主太多了！",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 3,
+            "date": "2024-07-23",
+            "year": 2024,
+            "date_label": "2024.07.23",
+            "paragraphs": [
+              "开始看『败北女主太多了！』",
+              "第一幕就是三角恋（应该是这个词吧？），一个女的爱男的，男的爱另一个女的，或许叫肉夹馍/汉堡恋会更形象？",
+              "日本作家是不是对这种关系有特殊喜爱啊，读的小说里怎么都有这种情节"
+            ],
+            "excerpt": "开始看『败北女主太多了！』\n\n第一幕就是三角恋（应该是这个词吧？），一个女的爱男的，男的爱另一个女的，或许叫肉夹馍/汉堡恋会更形象？\n\n日本作家是不是对这种关系有特殊喜爱啊，读的小说里怎么都有这种情节",
+            "message_url": "https://t.me/bookshelf_in_storageroom/4502",
+            "reference_url": ""
+          },
+          {
+            "id": 4512,
+            "title": "败北女主太多了！",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 5,
+            "date": "2024-07-24",
+            "year": 2024,
+            "date_label": "2024.07.24",
+            "paragraphs": [
+              "继续看这本书",
+              "这个男主是魅魔吗？他简直活在一个所有女性都被他催眠的世界里",
+              "作者写的也有问题 身边的女性对男主态度都这样了还觉得自己挺孤单，那些情节，当读者是弱智吗？完全为了搞笑而搞笑",
+              "就算是文化差异的话，属实有点过头了吧",
+              "不过已经出了番剧，或许看那个会更好一点"
+            ],
+            "excerpt": "继续看这本书\n\n这个男主是魅魔吗？他简直活在一个所有女性都被他催眠的世界里\n\n作者写的也有问题 身边的女性对男主态度都这样了还觉得自己挺孤单，那些情节，当读者是弱智吗？完全为了搞笑而搞笑\n\n就算是文化差异的话，属实有点过头了吧\n\n不过已经出了番剧，或许看那个会更好一点",
+            "message_url": "https://t.me/bookshelf_in_storageroom/4512",
+            "reference_url": ""
+          },
+          {
+            "id": 4552,
+            "title": "软瘾",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 4,
+            "date": "2024-07-29",
+            "year": 2024,
+            "date_label": "2024.07.29",
+            "paragraphs": [
+              "在看『软瘾』，主要内容就如副标题所说「终结那些窃取你时间、夺走你生活的强迫性习惯」",
+              "这本书的英文版是二十年前出现的，而作者的实践是三十年前开始的",
+              "读的时候我突然想到，对于「找到自我目标、自我实现」或者说更大范围上的「精神修行、灵修」领域，从三十年前到现在有什么发展呢？",
+              "这个领域关注精神，又比宗教更自由，应该很容易创新吧？但是我看了这本书的前言，还是「要认识真正的你自己，你现在看到的不是真实的你，勇敢面对真实的自己」这种观点（我只是看了前言，剩下的还没看）"
+            ],
+            "excerpt": "在看『软瘾』，主要内容就如副标题所说「终结那些窃取你时间、夺走你生活的强迫性习惯」\n\n这本书的英文版是二十年前出现的，而作者的实践是三十年前开始的\n\n读的时候我突然想到，对于「找到自我目标、自我实现」或者说更大范围上的「精神修行、灵修」领域，从三十年前到现在有什么发展呢？\n\n这个领域关注精神，又比宗教更自由，应该很容易创新吧？但是我看了这本书的前言，还是「要认识真正的你自己，你现在看到的不是真实的你，勇敢面对真实的自己」这种观点（我只是看了前言，剩下的还没看）",
+            "message_url": "https://t.me/bookshelf_in_storageroom/4552",
+            "reference_url": ""
+          },
+          {
+            "id": 4561,
+            "title": "软瘾",
+            "medium": "书",
+            "status": "随记",
+            "featured": true,
+            "max_paragraphs": 6,
+            "date": "2024-07-30",
+            "year": 2024,
+            "date_label": "2024.07.30",
+            "paragraphs": [
+              "继续看『软瘾』",
+              "这本书的大段文字都是在讲一个东西，甚至都是一个概念反复的用不同的话说出来",
+              "但是这对我的阅读很有帮助，因为我老是分心，陷入自己的想法中，这样即便是几句话没注意到也不紧要",
+              "我现在的问题在于：我的能力无法完成我的欲望，主要是我的欲望的问题",
+              "我的欲望几乎全部都来自于互联网，互联网的推送给了我不切实际的幻想：我也能像TA们那样完成某个成就",
+              "但是在现实和互联网直接有个巨大的障碍物，一个能够完成的欲望应当是基于现实而产生的，完全从互联网上生成的欲望和意淫没什么区别"
+            ],
+            "excerpt": "继续看『软瘾』\n\n这本书的大段文字都是在讲一个东西，甚至都是一个概念反复的用不同的话说出来\n\n但是这对我的阅读很有帮助，因为我老是分心，陷入自己的想法中，这样即便是几句话没注意到也不紧要\n\n我现在的问题在于：我的能力无法完成我的欲望，主要是我的欲望的问题\n\n我的欲望几乎全部都来自于互联网，互联网的推送给了我不切实际的幻想：我也能像TA们那样完成某个成就\n\n但是在现实和互联网直接有个巨大的障碍物，一个能够完成的欲望应当是基于现实而产生的，完全从互联网上生成的欲望和意淫没什么区别",
+            "message_url": "https://t.me/bookshelf_in_storageroom/4561",
+            "reference_url": ""
+          },
+          {
+            "id": 4636,
+            "title": "软瘾",
+            "medium": "书",
+            "status": "随记",
+            "max_paragraphs": 6,
+            "date": "2024-08-08",
+            "year": 2024,
+            "date_label": "2024.08.08",
+            "paragraphs": [
+              "继续看『软瘾』",
+              "第四章讲的是思维中存在的偏颇想法",
+              "在我看来作者主要写的是「思维惯性」以及「由脑补产生的荒谬的因果关系」",
+              "「思维惯性」指的是人总是基于以前的经验来决定接下来该怎么办，即便这个经验是错误的 它会把真相放在注意力盲点处，让人下意识就忽略真正的解法",
+              "并且，这些惯性想法即便是摆在人面前，他也会冒出：「虽然.... 但是我有不得不坚持它的理由」 这种狡辩，为它辩护（或者说为自己辩护，假设亲口承认这种思维是错误的，那么岂不是说明自己做了很多错事？所以要想解决它还得对自己真诚）",
+              "「由脑补产生的荒谬的因果关系」指的是「因为我在抽卡前没洗手，所以这次一个金都没抽到」「早餐喝1L水对身体好」「她不喜欢我，因为我留了长头发」这种，它本身更像是一种迷信行为，是愚昧的表现"
+            ],
+            "excerpt": "继续看『软瘾』\n\n第四章讲的是思维中存在的偏颇想法\n\n在我看来作者主要写的是「思维惯性」以及「由脑补产生的荒谬的因果关系」\n\n「思维惯性」指的是人总是基于以前的经验来决定接下来该怎么办，即便这个经验是错误的 它会把真相放在注意力盲点处，让人下意识就忽略真正的解法\n\n并且，这些惯性想法即便是摆在人面前，他也会冒出：「虽然.... 但是我有不得不坚持它的理由」 这种狡辩，为它辩护（或者说为自己辩护，假设亲口承认这种思维是错误的，那么岂不是说明自己做了很多错事？所以要想解决它还得对自己真诚）\n\n「由脑补产生的荒谬的因果关系」指的是「因为我在抽卡前没洗手，所以这次一个金都没抽到」「早餐喝1L水对身体好」「她不喜欢我，因为我留了长头发」这种，它本身更像是一种迷信行为，是愚昧的表现",
+            "message_url": "https://t.me/bookshelf_in_storageroom/4636",
+            "reference_url": ""
+          },
+          {
+            "id": 4724,
+            "title": "软瘾",
+            "medium": "书",
+            "status": "随记",
+            "max_paragraphs": 6,
+            "date": "2024-08-16",
+            "year": 2024,
+            "date_label": "2024.08.16",
+            "paragraphs": [
+              "继续读『软瘾』",
+              "读的时候我在听『时之歌』这个系列的歌，听说16岁时听的歌决定了你未来的音乐品味，时之歌的质量感觉确实如此",
+              "这部分讲的是构建自己的愿景，也就是对未来圆满生活的想象",
+              "虽然作者说构建这个愿景并不难，两分钟就足够了，但是我还是没办法想象什么是对我来说的「圆满的生活」",
+              "我想到了那张老师让学生在黑板上写下自己对未来想象的图，在别人都写要当科学家/医生/护士的时候，有个人在黑板上写了：我想平静地过完这一生，这个梦想听起来就能感觉太沉重了",
+              "继续读下去的时候，脑袋里浮现出『刀剑神域』中桐人和亚丝娜不在前线战斗，而是在某一层度假的场面，以及桐人守护亚丝娜在草地上小憩的场面"
+            ],
+            "excerpt": "继续读『软瘾』\n\n读的时候我在听『时之歌』这个系列的歌，听说16岁时听的歌决定了你未来的音乐品味，时之歌的质量感觉确实如此\n\n这部分讲的是构建自己的愿景，也就是对未来圆满生活的想象\n\n虽然作者说构建这个愿景并不难，两分钟就足够了，但是我还是没办法想象什么是对我来说的「圆满的生活」\n\n我想到了那张老师让学生在黑板上写下自己对未来想象的图，在别人都写要当科学家/医生/护士的时候，有个人在黑板上写了：我想平静地过完这一生，这个梦想听起来就能感觉太沉重了\n\n继续读下去的时候，脑袋里浮现出『刀剑神域』中桐人和亚丝娜不在前线战斗，而是在某一层度假的场面，以及桐人守护亚丝娜在草地上小憩的场面",
+            "message_url": "https://t.me/bookshelf_in_storageroom/4724",
+            "reference_url": ""
+          },
+          {
+            "id": 4737,
+            "title": "企鹅公路",
+            "medium": "番剧",
+            "status": "看完",
+            "max_paragraphs": 6,
+            "date": "2024-08-18",
+            "year": 2024,
+            "date_label": "2024.08.18",
+            "paragraphs": [
+              "看完了这个，昨天因为时间安排出了意外就没看",
+              "说到企鹅，我想起了另一个喜欢企鹅的角色",
+              "首先，有温柔大姐姐! 画面也很精致，很鲜艳的色调，总之我爱看",
+              "再次加深了日本人是对三明治恋情（TA喜欢ta，但ta喜欢另一个TA）有特殊癖好这一刻板印象",
+              "主角是大姐姐和小男孩（小大人类型），从小孩子口中可以说一些成年人说出来就会很油腻的话：「要生气的时候，想想乳房就好了，这样就能非常平静了」「我也不是一直在想，每天只有三十分钟左右」",
+              "里面也有一些我不喜欢的情节，比如喜欢捉弄（霸凌？）别人的三人小团体，虽然最后改邪归正了 还发现了自己对于做出超格举动未成年人的戾气，幸好我是最后一代了（也有可能作者就是想让观众反感的）"
+            ],
+            "excerpt": "看完了这个，昨天因为时间安排出了意外就没看\n\n说到企鹅，我想起了另一个喜欢企鹅的角色\n\n首先，有温柔大姐姐! 画面也很精致，很鲜艳的色调，总之我爱看\n\n再次加深了日本人是对三明治恋情（TA喜欢ta，但ta喜欢另一个TA）有特殊癖好这一刻板印象\n\n主角是大姐姐和小男孩（小大人类型），从小孩子口中可以说一些成年人说出来就会很油腻的话：「要生气的时候，想想乳房就好了，这样就能非常平静了」「我也不是一直在想，每天只有三十分钟左右」\n\n里面也有一些我不喜欢的情节，比如喜欢捉弄（霸凌？）别人的三人小团体，虽然最后改邪归正了 还发现了自己对于做出超格举动未成年人的戾气，幸好我是最后一代了（也有可能作者就是想让观众反感的）",
+            "message_url": "https://t.me/bookshelf_in_storageroom/4737",
+            "reference_url": ""
+          },
+          {
+            "id": 5300,
+            "title": "盒中之海",
+            "medium": "电影",
+            "status": "看完",
+            "max_paragraphs": 4,
+            "date": "2024-10-07",
+            "year": 2024,
+            "date_label": "2024.10.07",
+            "paragraphs": [
+              "看完了《盒中之海》 画风不是我喜欢的那种，而且感觉有多种画风混合 画面有时候感觉一卡一卡的，2D和3D的转换有点突兀 （可能是为了减少成本吧） 剧情方面没什么说的，看名字就知道大概讲了什么东西",
+              "一般般，没啥看的必要"
+            ],
+            "excerpt": "看完了《盒中之海》 画风不是我喜欢的那种，而且感觉有多种画风混合 画面有时候感觉一卡一卡的，2D和3D的转换有点突兀 （可能是为了减少成本吧） 剧情方面没什么说的，看名字就知道大概讲了什么东西\n\n一般般，没啥看的必要",
+            "message_url": "https://t.me/bookshelf_in_storageroom/5300",
+            "reference_url": ""
+          },
+          {
+            "id": 5402,
+            "title": "朱同在三年级丢失了超能力",
+            "medium": "电影",
+            "status": "看完",
+            "max_paragraphs": 5,
+            "date": "2024-10-14",
+            "year": 2024,
+            "date_label": "2024.10.14",
+            "paragraphs": [
+              "我在看『朱同在三年级丢失了超能力』",
+              "这学校氛围让我窒息...",
+              "虽然我不记得我在小学发生了什么，但是这里面老师的那种压迫感，那些拿鸡毛当令箭的那些学生，我可实在是太讨厌了...",
+              "我一直觉得当教师的，特别是给低年级学生当教师的，当久了自己的性格都会改变，让人厌恶",
+              "另外，我还觉得未成年人的恶是纯粹的恶，人之初性本恶的那种，我十分讨厌这种恶"
+            ],
+            "excerpt": "我在看『朱同在三年级丢失了超能力』\n\n这学校氛围让我窒息...\n\n虽然我不记得我在小学发生了什么，但是这里面老师的那种压迫感，那些拿鸡毛当令箭的那些学生，我可实在是太讨厌了...\n\n我一直觉得当教师的，特别是给低年级学生当教师的，当久了自己的性格都会改变，让人厌恶\n\n另外，我还觉得未成年人的恶是纯粹的恶，人之初性本恶的那种，我十分讨厌这种恶",
+            "message_url": "https://t.me/bookshelf_in_storageroom/5402",
+            "reference_url": ""
+          },
+          {
+            "id": 5429,
+            "title": "平面国",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 3,
+            "date": "2024-10-17",
+            "year": 2024,
+            "date_label": "2024.10.17",
+            "paragraphs": [
+              "我在读『平面国』",
+              "这本书的点子放在现在比较一般，但是考虑到作者是在一百四十年前写的，就只能说作者的想象力有点过于丰富了",
+              "这本书也不是单纯的科幻小说，它披着科幻的皮，讨论的是社会问题，有关女性，统治阶级，社会制度等等，放在今天也不过时（如果在现代有人写这样的小说，我毫不怀疑这会成为网络键政新梗）"
+            ],
+            "excerpt": "我在读『平面国』\n\n这本书的点子放在现在比较一般，但是考虑到作者是在一百四十年前写的，就只能说作者的想象力有点过于丰富了\n\n这本书也不是单纯的科幻小说，它披着科幻的皮，讨论的是社会问题，有关女性，统治阶级，社会制度等等，放在今天也不过时（如果在现代有人写这样的小说，我毫不怀疑这会成为网络键政新梗）",
+            "message_url": "https://t.me/bookshelf_in_storageroom/5429",
+            "reference_url": ""
+          },
+          {
+            "id": 5938,
+            "title": "我还能看到多少次满月升起",
+            "medium": "书",
+            "status": "弃读",
+            "max_paragraphs": 3,
+            "date": "2024-11-27",
+            "year": 2024,
+            "date_label": "2024.11.27",
+            "paragraphs": [
+              "没看完『我还能看到多少次满月升起』",
+              "这是坂本龙一回顾自己一生经历而写的书，我对坂本龙一没有任何了解，只是被网络推荐过他的音乐 书里有很多人名/电影名/音乐家/音乐等等，我几乎完全没听过，所以看这本书感觉很无聊",
+              "看了几章后就直接跳到最后的后记部分，随便翻翻就结束了这次阅读"
+            ],
+            "excerpt": "没看完『我还能看到多少次满月升起』\n\n这是坂本龙一回顾自己一生经历而写的书，我对坂本龙一没有任何了解，只是被网络推荐过他的音乐 书里有很多人名/电影名/音乐家/音乐等等，我几乎完全没听过，所以看这本书感觉很无聊\n\n看了几章后就直接跳到最后的后记部分，随便翻翻就结束了这次阅读",
+            "message_url": "https://t.me/bookshelf_in_storageroom/5938",
+            "reference_url": ""
+          },
+          {
+            "id": 6051,
+            "title": "东京八平米",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 4,
+            "date": "2024-12-08",
+            "year": 2024,
+            "date_label": "2024.12.08",
+            "paragraphs": [
+              "继续看『东京八平米』",
+              "看的过程中越发觉得自己是个乡下土狗：",
+              "没去过电影院，没去过酒吧，也不知道哪里有各种展览，喝的东西只知道各种奶茶店，咖啡只知道瑞幸/幸运咖",
+              "我能想象的娱乐大概只有出山吃东西？ 但是去吃什么也是个难题..."
+            ],
+            "excerpt": "继续看『东京八平米』\n\n看的过程中越发觉得自己是个乡下土狗：\n\n没去过电影院，没去过酒吧，也不知道哪里有各种展览，喝的东西只知道各种奶茶店，咖啡只知道瑞幸/幸运咖\n\n我能想象的娱乐大概只有出山吃东西？ 但是去吃什么也是个难题...",
+            "message_url": "https://t.me/bookshelf_in_storageroom/6051",
+            "reference_url": ""
+          },
+          {
+            "id": 6201,
+            "title": "东京八平米",
+            "medium": "书",
+            "status": "随记",
+            "max_paragraphs": 5,
+            "date": "2024-12-24",
+            "year": 2024,
+            "date_label": "2024.12.24",
+            "paragraphs": [
+              "继续看『东京八平米』",
+              "我也时常有这种想法：我没有参加那样的活动，或者没有走那条生活的方向，会不会是做错了？",
+              "我只有一些决定是知道我确实是对的，剩下的都是未可知的状态"
+            ],
+            "excerpt": "继续看『东京八平米』\n\n我也时常有这种想法：我没有参加那样的活动，或者没有走那条生活的方向，会不会是做错了？\n\n我只有一些决定是知道我确实是对的，剩下的都是未可知的状态",
+            "message_url": "https://t.me/bookshelf_in_storageroom/6201",
+            "reference_url": ""
+          },
+          {
+            "id": 6254,
+            "title": "外面是夏天",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 5,
+            "date": "2024-12-29",
+            "year": 2024,
+            "date_label": "2024.12.29",
+            "paragraphs": [
+              "在看书『外面是夏天』，韩国人写的 七个短篇小说，讲的是城市生活发生的事情，因为国情类似，所以当成中国的也不是不行（书里讲的都是一些伤感的事情，失独/父母双亡/上岸第一剑之类的）",
+              "我想起了一句口号：「城市让生活更美好」，但是城市化到现在，真的更美好了吗？或许该改成：「发展让生活更美好」",
+              "当前的社会里，有太多能让人的生活坠入深渊的因素了，偏偏社会保障又没用，那就只能尝试用自己的方式避免",
+              "受限于眼界，每个人的处理方式又不一样，今天看到的网易拍的关于县中学生的视频里面就是这样，家长们/学校用战术上的勤奋掩盖战略上的懒惰 —— 感觉作者的作品有些模版化，几个短篇虽然讲的是不同的故事，但是给我的感觉都很相似"
+            ],
+            "excerpt": "在看书『外面是夏天』，韩国人写的 七个短篇小说，讲的是城市生活发生的事情，因为国情类似，所以当成中国的也不是不行（书里讲的都是一些伤感的事情，失独/父母双亡/上岸第一剑之类的）\n\n我想起了一句口号：「城市让生活更美好」，但是城市化到现在，真的更美好了吗？或许该改成：「发展让生活更美好」\n\n当前的社会里，有太多能让人的生活坠入深渊的因素了，偏偏社会保障又没用，那就只能尝试用自己的方式避免\n\n受限于眼界，每个人的处理方式又不一样，今天看到的网易拍的关于县中学生的视频里面就是这样，家长们/学校用战术上的勤奋掩盖战略上的懒惰 —— 感觉作者的作品有些模版化，几个短篇虽然讲的是不同的故事，但是给我的感觉都很相似",
+            "message_url": "https://t.me/bookshelf_in_storageroom/6254",
+            "reference_url": ""
+          },
+          {
+            "id": 6580,
+            "title": "机器人之梦",
+            "medium": "电影",
+            "status": "看完",
+            "max_paragraphs": 2,
+            "date": "2025-01-26",
+            "year": 2025,
+            "date_label": "2025.01.26",
+            "paragraphs": ["希望我也能在合适的时间遇上合适的人"],
+            "excerpt": "希望我也能在合适的时间遇上合适的人",
+            "message_url": "https://t.me/bookshelf_in_storageroom/6580",
+            "reference_url": ""
+          },
+          {
+            "id": 6585,
+            "title": "大空头",
+            "medium": "电影",
+            "status": "看完",
+            "max_paragraphs": 6,
+            "date": "2025-01-27",
+            "year": 2025,
+            "date_label": "2025.01.27",
+            "paragraphs": [
+              "看完了《大空头》",
+              "我当前对投资的理解是：对资产定价，发现市场错误的地方 但是我对整个市场几乎是一点了解也没有，所以很多行为并不能称为在投资，而是投机",
+              "那些纯数学的，关于量化交易的建模我没怎么实践过",
+              "套利是加密市场必不可少的一部分，可以深挖",
+              "控制自己的风险最重要，十块钱有十块钱的玩法，一百块有一百块的玩法",
+              "希望我不会倒在这条路上"
+            ],
+            "excerpt": "看完了《大空头》\n\n我当前对投资的理解是：对资产定价，发现市场错误的地方 但是我对整个市场几乎是一点了解也没有，所以很多行为并不能称为在投资，而是投机\n\n那些纯数学的，关于量化交易的建模我没怎么实践过\n\n套利是加密市场必不可少的一部分，可以深挖\n\n控制自己的风险最重要，十块钱有十块钱的玩法，一百块有一百块的玩法\n\n希望我不会倒在这条路上",
+            "message_url": "https://t.me/bookshelf_in_storageroom/6585",
+            "reference_url": ""
+          },
+          {
+            "id": 6736,
+            "title": "败犬女主太多了！",
+            "medium": "番剧",
+            "status": "看完",
+            "featured": true,
+            "max_paragraphs": 4,
+            "date": "2025-02-09",
+            "year": 2025,
+            "date_label": "2025.02.09",
+            "paragraphs": [
+              "看了《败犬女主太多了》",
+              "截图是11集末尾",
+              "我想到了以前在互联网角落看到的情书，我不知道他们的关系现在如何，但是他们至少有段时间是真心相爱的 总有一天这个频道也会沉寂，我不知道那时候我在干什么，但是我现在和以前发送的消息里面，我的快乐和痛苦都是真实的 所以网友们多来点真诚的互动啊，趁我还在这里"
+            ],
+            "excerpt": "看了《败犬女主太多了》\n\n截图是11集末尾\n\n我想到了以前在互联网角落看到的情书，我不知道他们的关系现在如何，但是他们至少有段时间是真心相爱的 总有一天这个频道也会沉寂，我不知道那时候我在干什么，但是我现在和以前发送的消息里面，我的快乐和痛苦都是真实的 所以网友们多来点真诚的互动啊，趁我还在这里",
+            "message_url": "https://t.me/bookshelf_in_storageroom/6736",
+            "reference_url": ""
+          },
+          {
+            "id": 6746,
+            "title": "青之箱",
+            "medium": "番剧",
+            "status": "在看",
+            "max_paragraphs": 4,
+            "date": "2025-02-10",
+            "year": 2025,
+            "date_label": "2025.02.10",
+            "paragraphs": [
+              "在看『青之箱（青春之箱）』",
+              "找资源的时候用青之箱没找到，还以为输错了名字",
+              "画风不错，很精致",
+              "我好喜欢运动系的漂亮妹妹啊，不过我本身没接触过多少专业的运动（指具体规则不清楚）"
+            ],
+            "excerpt": "在看『青之箱（青春之箱）』\n\n找资源的时候用青之箱没找到，还以为输错了名字\n\n画风不错，很精致\n\n我好喜欢运动系的漂亮妹妹啊，不过我本身没接触过多少专业的运动（指具体规则不清楚）",
+            "message_url": "https://t.me/bookshelf_in_storageroom/6746",
+            "reference_url": ""
+          },
+          {
+            "id": 6794,
+            "title": "对赌：信息不足时如何做出高明决策",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 4,
+            "date": "2025-02-16",
+            "year": 2025,
+            "date_label": "2025.02.16",
+            "paragraphs": [
+              "我在看『对赌：信息不足时如何做出高明决策』",
+              "一开始提出了一种常见的认识错误：好的决策不一定带来好的结果，以结果为导向会让人走向错误",
+              "回想起我在期权上的经历，确实如此 我当时所做的决策似乎并没有那么糟糕，市场暴跌后反弹是常见的现象，我只是进场时间太早了而已"
+            ],
+            "excerpt": "我在看『对赌：信息不足时如何做出高明决策』\n\n一开始提出了一种常见的认识错误：好的决策不一定带来好的结果，以结果为导向会让人走向错误\n\n回想起我在期权上的经历，确实如此 我当时所做的决策似乎并没有那么糟糕，市场暴跌后反弹是常见的现象，我只是进场时间太早了而已",
+            "message_url": "https://t.me/bookshelf_in_storageroom/6794",
+            "reference_url": ""
+          },
+          {
+            "id": 7603,
+            "title": "涛声依旧：中国社会年报 2000 年版",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 5,
+            "date": "2025-04-30",
+            "year": 2025,
+            "date_label": "2025.04.30",
+            "paragraphs": [
+              "我在看 『涛声依旧 中国社会年报 2000年版』 这是一个系列的书，但是我找到最新的似乎只到了2014年",
+              "书里面的用语很「有年代感」，而且里面讲的很多内容都可以用在现在，只要把里面的数据换成今天的就行",
+              "似乎什么都没有变 时代的发展把蛋糕做大了，矛盾一直被缓和而不是被处理，那么接下来发展速度变慢的情况下，还会重演过去的混乱吗？最近几起恶性伤人事件可能就是答案",
+              "冒出来个想法：把这些文章里面的数据换成现在的数据，然后发到知乎上会怎么样？"
+            ],
+            "excerpt": "我在看 『涛声依旧 中国社会年报 2000年版』 这是一个系列的书，但是我找到最新的似乎只到了2014年\n\n书里面的用语很「有年代感」，而且里面讲的很多内容都可以用在现在，只要把里面的数据换成今天的就行\n\n似乎什么都没有变 时代的发展把蛋糕做大了，矛盾一直被缓和而不是被处理，那么接下来发展速度变慢的情况下，还会重演过去的混乱吗？最近几起恶性伤人事件可能就是答案\n\n冒出来个想法：把这些文章里面的数据换成现在的数据，然后发到知乎上会怎么样？",
+            "message_url": "https://t.me/bookshelf_in_storageroom/7603",
+            "reference_url": ""
+          },
+          {
+            "id": 8234,
+            "title": "控糖革命",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 3,
+            "date": "2025-06-13",
+            "year": 2025,
+            "date_label": "2025.06.13",
+            "paragraphs": [
+              "最近在看「控糖革命」，还没看完，但是学到了一点有用的东西（饭后适当运动，比如我正好要骑车）",
+              "想买个动态血糖仪，但是又怕不方便（运动/流汗/洗澡之类的） 等下看看评测吧"
+            ],
+            "excerpt": "最近在看「控糖革命」，还没看完，但是学到了一点有用的东西（饭后适当运动，比如我正好要骑车）\n\n想买个动态血糖仪，但是又怕不方便（运动/流汗/洗澡之类的） 等下看看评测吧",
+            "message_url": "https://t.me/bookshelf_in_storageroom/8234",
+            "reference_url": ""
+          },
+          {
+            "id": 8323,
+            "title": "青之箱",
+            "medium": "番剧",
+            "status": "看完",
+            "max_paragraphs": 2,
+            "date": "2025-06-20",
+            "year": 2025,
+            "date_label": "2025.06.20",
+            "paragraphs": [
+              "看完了「青之箱」的第二十五集（是的我一直没看，隔了好长时间了",
+              "第二季也有计划出了，希望能尽快把漫画追完"
+            ],
+            "excerpt": "看完了「青之箱」的第二十五集（是的我一直没看，隔了好长时间了\n\n第二季也有计划出了，希望能尽快把漫画追完",
+            "message_url": "https://t.me/bookshelf_in_storageroom/8323",
+            "reference_url": ""
+          },
+          {
+            "id": 8542,
+            "title": "跃动青春",
+            "medium": "番剧",
+            "status": "弃看",
+            "max_paragraphs": 2,
+            "date": "2025-07-11",
+            "year": 2025,
+            "date_label": "2025.07.11",
+            "paragraphs": ["「跃动青春」，看到一半突然感觉没意思，就不想看了"],
+            "excerpt": "「跃动青春」，看到一半突然感觉没意思，就不想看了",
+            "message_url": "https://t.me/bookshelf_in_storageroom/8542",
+            "reference_url": ""
+          },
+          {
+            "id": 8543,
+            "title": "猫猫的奇幻漂流",
+            "medium": "电影",
+            "status": "看完",
+            "max_paragraphs": 4,
+            "date": "2025-07-11",
+            "year": 2025,
+            "date_label": "2025.07.11",
+            "paragraphs": [
+              "看完了「猫猫的奇幻漂流」 影片里面的声音都是动物+自然背景音+一些音乐 看了之后没什么感觉，一般般 具体情节没什么好说的，略显老套（甚至可以说没有）"
+            ],
+            "excerpt": "看完了「猫猫的奇幻漂流」 影片里面的声音都是动物+自然背景音+一些音乐 看了之后没什么感觉，一般般 具体情节没什么好说的，略显老套（甚至可以说没有）",
+            "message_url": "https://t.me/bookshelf_in_storageroom/8543",
+            "reference_url": ""
+          },
+          {
+            "id": 8705,
+            "title": "利兹与青鸟",
+            "medium": "番剧",
+            "status": "重看",
+            "max_paragraphs": 2,
+            "date": "2025-07-26",
+            "year": 2025,
+            "date_label": "2025.07.26",
+            "paragraphs": [
+              "重新看了「利兹与青鸟」 双方心意相通的音乐演绎太美了"
+            ],
+            "excerpt": "重新看了「利兹与青鸟」 双方心意相通的音乐演绎太美了",
+            "message_url": "https://t.me/bookshelf_in_storageroom/8705",
+            "reference_url": ""
+          },
+          {
+            "id": 8756,
+            "title": "幸福伽菜子的快乐杀手生活",
+            "medium": "电视剧",
+            "status": "看完",
+            "max_paragraphs": 5,
+            "date": "2025-07-31",
+            "year": 2025,
+            "date_label": "2025.07.31",
+            "paragraphs": [
+              "看完了「幸福伽菜子的快乐杀手生活」 欢乐向的，漫画改编，总共只有六集 剧情大部分时候都在线，欢乐向的东西无脑乐呵一下就好了 但是看完之后感觉好多东西没讲完，有空的话或许会看看漫画 （刚刚搜了一下明年会出第二季）",
+              "推荐看看"
+            ],
+            "excerpt": "看完了「幸福伽菜子的快乐杀手生活」 欢乐向的，漫画改编，总共只有六集 剧情大部分时候都在线，欢乐向的东西无脑乐呵一下就好了 但是看完之后感觉好多东西没讲完，有空的话或许会看看漫画 （刚刚搜了一下明年会出第二季）\n\n推荐看看",
+            "message_url": "https://t.me/bookshelf_in_storageroom/8756",
+            "reference_url": ""
+          },
+          {
+            "id": 8812,
+            "title": "朝花夕誓",
+            "medium": "番剧",
+            "status": "看完",
+            "featured": true,
+            "max_paragraphs": 7,
+            "date": "2025-08-05",
+            "year": 2025,
+            "date_label": "2025.08.05",
+            "paragraphs": [
+              "看完了「朝花夕誓」，讲母爱与成长的故事，感情很细腻，配乐和画面也很好，推荐看看",
+              "看的时候内心很煎熬，我不知道怎么具体描述这种感觉，我的感情太匮乏了，没法描述这样的东西 这部电影就像夏季的山洪水冲过我心里长满草的河道上，乱糟糟的不知道怎么说 或许我该多看看这种情感细腻的电影？ 总之我不抗拒，有想流泪的冲动",
+              "有后代对我来说是件非常高风险的事情，简直比全副身家开不能平仓100倍杠杆还危险 我没有能力承担，我不敢想象我得对某个人的人生负责，ta甚至意识不到这是什么 我也没能力营造合适的家庭氛围，我甚至都无法表达对别人的爱 在超出某一成本区间后，我习惯于算计得失（我怀疑这是在投机市场上探索过多导致的职业病 爱上一个人对现在的我来说风险还是太大了 我又是为什么而出生的呢？"
+            ],
+            "excerpt": "看完了「朝花夕誓」，讲母爱与成长的故事，感情很细腻，配乐和画面也很好，推荐看看\n\n看的时候内心很煎熬，我不知道怎么具体描述这种感觉，我的感情太匮乏了，没法描述这样的东西 这部电影就像夏季的山洪水冲过我心里长满草的河道上，乱糟糟的不知道怎么说 或许我该多看看这种情感细腻的电影？ 总之我不抗拒，有想流泪的冲动\n\n有后代对我来说是件非常高风险的事情，简直比全副身家开不能平仓100倍杠杆还危险 我没有能力承担，我不敢想象我得对某个人的人生负责，ta甚至意识不到这是什么 我也没能力营造合适的家庭氛围，我甚至都无法表达对别人的爱 在超出某一成本区间后，我习惯于算计得失（我怀疑这是在投机市场上探索过多导致的职业病 爱上一个人对现在的我来说风险还是太大了 我又是为什么而出生的呢？",
+            "message_url": "https://t.me/bookshelf_in_storageroom/8812",
+            "reference_url": ""
+          },
+          {
+            "id": 8821,
+            "title": "情书",
+            "medium": "电影",
+            "status": "看完",
+            "max_paragraphs": 4,
+            "date": "2025-08-06",
+            "year": 2025,
+            "date_label": "2025.08.06",
+            "paragraphs": [
+              "看完了「情书」",
+              "这部电影太棒了，看着它就像读书一样，中途完全没有分心看手机的想法（好久没有这种体验了 它讲的故事很普通很直白，但是你看它就能感受到那种不同 人物塑造也没有任何不讨喜的地方，他们的行为都是「合理的」",
+              "总之推荐看看"
+            ],
+            "excerpt": "看完了「情书」\n\n这部电影太棒了，看着它就像读书一样，中途完全没有分心看手机的想法（好久没有这种体验了 它讲的故事很普通很直白，但是你看它就能感受到那种不同 人物塑造也没有任何不讨喜的地方，他们的行为都是「合理的」\n\n总之推荐看看",
+            "message_url": "https://t.me/bookshelf_in_storageroom/8821",
+            "reference_url": ""
+          },
+          {
+            "id": 8875,
+            "title": "三日间的幸福",
+            "medium": "书",
+            "status": "弃读",
+            "max_paragraphs": 3,
+            "date": "2025-08-12",
+            "year": 2025,
+            "date_label": "2025.08.12",
+            "paragraphs": [
+              "看了：三日间的幸福（的开头和结尾，中间的部分没看）",
+              "可能我不适合读轻小说，我觉得写得很啰嗦（似乎之前也看到文章写了这个观点，还说是由什么原因造成的）",
+              "然后情感什么的也没感受到，所以大概翻了下就不看了"
+            ],
+            "excerpt": "看了：三日间的幸福（的开头和结尾，中间的部分没看）\n\n可能我不适合读轻小说，我觉得写得很啰嗦（似乎之前也看到文章写了这个观点，还说是由什么原因造成的）\n\n然后情感什么的也没感受到，所以大概翻了下就不看了",
+            "message_url": "https://t.me/bookshelf_in_storageroom/8875",
+            "reference_url": ""
+          },
+          {
+            "id": 9213,
+            "title": "夜晚的潜水艇",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 3,
+            "date": "2025-09-21",
+            "year": 2025,
+            "date_label": "2025.09.21",
+            "paragraphs": [
+              "在飞机上看了个短篇小说：夜晚的潜水艇",
+              "故事很棒，我以前也是这么想象力丰富，想象中的情节会自行演化，每天睡觉前都在幻想，然后不知道什么时候就睡过去了",
+              "后来就不行了，我的想象能力在下降，我只能进入想象很短时间，情节也变得很刻板"
+            ],
+            "excerpt": "在飞机上看了个短篇小说：夜晚的潜水艇\n\n故事很棒，我以前也是这么想象力丰富，想象中的情节会自行演化，每天睡觉前都在幻想，然后不知道什么时候就睡过去了\n\n后来就不行了，我的想象能力在下降，我只能进入想象很短时间，情节也变得很刻板",
+            "message_url": "https://t.me/bookshelf_in_storageroom/9213",
+            "reference_url": ""
+          },
+          {
+            "id": 9516,
+            "title": "柠檬、拍卖和互联网算法",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 5,
+            "date": "2025-10-21",
+            "year": 2025,
+            "date_label": "2025.10.21",
+            "paragraphs": [
+              "读完了「柠檬、拍卖和互联网算法」，质量一般般，不推荐，翻译也很差",
+              "第三章讲的是柠檬（次品）的存在会让信息不对称的市场崩溃，因为买家的最优解就是把所有产品都当成次品，这样才能避免损失 第四章讲的是樱桃（优品）为了不让市场崩溃，会发出特殊的「信号」让买家知道它是优品，值得购买，这里作者用了劳动力市场来解释：为什么明知道学位不是唯一证明能力的方式，但是企业大多会选择以此为门槛，这是双方在一步步建立信任 广告和无条件退款都是在证明自身的可信程度",
+              "第五章讲的是拍卖，我遇到需要拍卖的场景很少，用到方法是荷兰拍，也就是减价拍卖 小说中经常用到的是增价拍卖，我只在京东官方卖仅退货商品时用到过，这个章节也讲到了电商平台的拍卖机制 书里讲到一个比较有趣的数据：拍卖后的价格相对于固定价格卖会有折价，它解释是讨价还价的成本比较高，这样变相筛出了对价格敏感的人群（超市里牛奶1元优惠券就是为了这部分人设立的）",
+              "第六章讲的是平台，日常在互联网冲浪时经常能看到认为计划经济比市场经济更优的观点，并且在他们的论述中计划经济其实就是有个老大哥安排你每天吃啥用啥，市场经济就是广场上一堆人在以物换物，仅仅将是否有「管控」作为二者的区分点是完全不可行的，不管是什么经济都需要有一股力量维护规则",
+              "平台在做大了之后很容易就变质，它会试图用手中权力获取更大的利益，我想这就是区块链的魅力：所有的规则都明明白白的用代码写清，但是这还不够，代码没办法硬编码所有的情况，所以一个好的产品还得有一个好的团队，而不是写完代码送上链后就完事了"
+            ],
+            "excerpt": "读完了「柠檬、拍卖和互联网算法」，质量一般般，不推荐，翻译也很差\n\n第三章讲的是柠檬（次品）的存在会让信息不对称的市场崩溃，因为买家的最优解就是把所有产品都当成次品，这样才能避免损失 第四章讲的是樱桃（优品）为了不让市场崩溃，会发出特殊的「信号」让买家知道它是优品，值得购买，这里作者用了劳动力市场来解释：为什么明知道学位不是唯一证明能力的方式，但是企业大多会选择以此为门槛，这是双方在一步步建立信任 广告和无条件退款都是在证明自身的可信程度\n\n第五章讲的是拍卖，我遇到需要拍卖的场景很少，用到方法是荷兰拍，也就是减价拍卖 小说中经常用到的是增价拍卖，我只在京东官方卖仅退货商品时用到过，这个章节也讲到了电商平台的拍卖机制 书里讲到一个比较有趣的数据：拍卖后的价格相对于固定价格卖会有折价，它解释是讨价还价的成本比较高，这样变相筛出了对价格敏感的人群（超市里牛奶1元优惠券就是为了这部分人设立的）\n\n第六章讲的是平台，日常在互联网冲浪时经常能看到认为计划经济比市场经济更优的观点，并且在他们的论述中计划经济其实就是有个老大哥安排你每天吃啥用啥，市场经济就是广场上一堆人在以物换物，仅仅将是否有「管控」作为二者的区分点是完全不可行的，不管是什么经济都需要有一股力量维护规则\n\n平台在做大了之后很容易就变质，它会试图用手中权力获取更大的利益，我想这就是区块链的魅力：所有的规则都明明白白的用代码写清，但是这还不够，代码没办法硬编码所有的情况，所以一个好的产品还得有一个好的团队，而不是写完代码送上链后就完事了",
+            "message_url": "https://t.me/bookshelf_in_storageroom/9516",
+            "reference_url": ""
+          },
+          {
+            "id": 9667,
+            "title": "以日为鉴",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 5,
+            "date": "2025-11-03",
+            "year": 2025,
+            "date_label": "2025.11.03",
+            "paragraphs": [
+              "断断续续读完了「以日为鉴」 讲了日本从泡沫到崩溃到复苏这个过程中的一些重大事件 结合中国当前的情况，竟能如此相像 旧的观念在崩塌，新的观念还没有得到认可",
+              "书里说的出路是出海 我觉得还有另一条路：私人定制化服务 有钱人愿意付溢价购买服务，只要某个领域的有钱人很多，那么长久下来也能赚到很多的钱 （比如手工/bjd娃娃/涂装之类的"
+            ],
+            "excerpt": "断断续续读完了「以日为鉴」 讲了日本从泡沫到崩溃到复苏这个过程中的一些重大事件 结合中国当前的情况，竟能如此相像 旧的观念在崩塌，新的观念还没有得到认可\n\n书里说的出路是出海 我觉得还有另一条路：私人定制化服务 有钱人愿意付溢价购买服务，只要某个领域的有钱人很多，那么长久下来也能赚到很多的钱 （比如手工/bjd娃娃/涂装之类的",
+            "message_url": "https://t.me/bookshelf_in_storageroom/9667",
+            "reference_url": ""
+          },
+          {
+            "id": 9767,
+            "title": "无声告白",
+            "medium": "书",
+            "status": "在读",
+            "featured": true,
+            "max_paragraphs": 6,
+            "date": "2025-11-13",
+            "year": 2025,
+            "date_label": "2025.11.13",
+            "paragraphs": [
+              "「无声告白」看到后半部分，我才意识到讲的就是老中父母和他们忍受衡水模式的子女们（可能在江苏上学更贴合实际一些）的故事，只不过故事发生在美国，又混合了种族歧视、同性恋等更复杂的社会背景",
+              "故事里的父亲问题很大，出轨，自卑，他害怕子女重复自己人生的阴影，却又没有真正的能力和方法去保护他们。母亲的问题同样严重——她把自己的愿望、恐惧、理想投射到大女儿身上，误以为那就是大女儿的真实渴望。 父母的教育方向，一个是要合群，一个是要出众 大女儿无法同时兼顾这两个方向，只能不断撒谎来填补父母做的美梦",
+              "子女们知道这个家的氛围有问题，但是无法逃离，只好相互依偎着取暖 而当其中一个人被「允许」离开，剩下的家庭成员就会承受更沉重的压力 心理重负也随之层层堆叠：大女儿比母亲更早知道父亲的出轨；她知道邻居家的儿子对自己的哥哥怀有情愫 一切隐秘、未言的情绪像潮水一样，推着她走向某种蜕变，但她倒在了最后一步 如果在那个晚上，她不是选择跳入湖中游泳，而是绕湖跑一圈，她就不会死。她会在阳光之下，把父母的幻梦彻底戳破，她会以一种更真实的方式活下去",
+              "—— 另外一个比较幽默的事情是，在小红书上刷到一个评论问可不可以给她的女儿推荐这本书（练习英文或者就是多读书？）"
+            ],
+            "excerpt": "「无声告白」看到后半部分，我才意识到讲的就是老中父母和他们忍受衡水模式的子女们（可能在江苏上学更贴合实际一些）的故事，只不过故事发生在美国，又混合了种族歧视、同性恋等更复杂的社会背景\n\n故事里的父亲问题很大，出轨，自卑，他害怕子女重复自己人生的阴影，却又没有真正的能力和方法去保护他们。母亲的问题同样严重——她把自己的愿望、恐惧、理想投射到大女儿身上，误以为那就是大女儿的真实渴望。 父母的教育方向，一个是要合群，一个是要出众 大女儿无法同时兼顾这两个方向，只能不断撒谎来填补父母做的美梦\n\n子女们知道这个家的氛围有问题，但是无法逃离，只好相互依偎着取暖 而当其中一个人被「允许」离开，剩下的家庭成员就会承受更沉重的压力 心理重负也随之层层堆叠：大女儿比母亲更早知道父亲的出轨；她知道邻居家的儿子对自己的哥哥怀有情愫 一切隐秘、未言的情绪像潮水一样，推着她走向某种蜕变，但她倒在了最后一步 如果在那个晚上，她不是选择跳入湖中游泳，而是绕湖跑一圈，她就不会死。她会在阳光之下，把父母的幻梦彻底戳破，她会以一种更真实的方式活下去\n\n—— 另外一个比较幽默的事情是，在小红书上刷到一个评论问可不可以给她的女儿推荐这本书（练习英文或者就是多读书？）",
+            "message_url": "https://t.me/bookshelf_in_storageroom/9767",
+            "reference_url": ""
+          },
+          {
+            "id": 10018,
+            "title": "窄门",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 6,
+            "date": "2025-12-02",
+            "year": 2025,
+            "date_label": "2025.12.02",
+            "paragraphs": [
+              "读完了「窄门」 真没意思，男女主都太奇葩了 女主读经走火入魔，放到现在多多少少也能拿来当个反邪教的案例 男主软弱无力，不懂得止损，主动当狗 不推荐，纯浪费时间",
+              "— 上面是把他们当成「人」来看的 假如把他们看成作者的「想法/没法直说的思想」，他们表现出来的就更纯粹一些 可以说他们对爱情真诚执着，也可以说是一根筋 不喜欢这种想法，遇到这种人我都绕着走"
+            ],
+            "excerpt": "读完了「窄门」 真没意思，男女主都太奇葩了 女主读经走火入魔，放到现在多多少少也能拿来当个反邪教的案例 男主软弱无力，不懂得止损，主动当狗 不推荐，纯浪费时间\n\n— 上面是把他们当成「人」来看的 假如把他们看成作者的「想法/没法直说的思想」，他们表现出来的就更纯粹一些 可以说他们对爱情真诚执着，也可以说是一根筋 不喜欢这种想法，遇到这种人我都绕着走",
+            "message_url": "https://t.me/bookshelf_in_storageroom/10018",
+            "reference_url": ""
+          },
+          {
+            "id": 10199,
+            "title": "小城日常",
+            "medium": "番剧",
+            "status": "看完",
+            "max_paragraphs": 2,
+            "date": "2025-12-17",
+            "year": 2025,
+            "date_label": "2025.12.17",
+            "paragraphs": ["看完了「小城日常」 太喜欢了"],
+            "excerpt": "看完了「小城日常」 太喜欢了",
+            "message_url": "https://t.me/bookshelf_in_storageroom/10199",
+            "reference_url": ""
+          },
+          {
+            "id": 10324,
+            "title": "红辣椒",
+            "medium": "番剧",
+            "status": "看完",
+            "max_paragraphs": 4,
+            "date": "2025-12-24",
+            "year": 2025,
+            "date_label": "2025.12.24",
+            "paragraphs": [
+              "看完了「红辣椒」，喜欢画风+配乐",
+              "最直观的感受是：一部爱情片+对什么是梦境/现实的辨析",
+              "其他的就没有了，前半段太无聊，看的想睡觉"
+            ],
+            "excerpt": "看完了「红辣椒」，喜欢画风+配乐\n\n最直观的感受是：一部爱情片+对什么是梦境/现实的辨析\n\n其他的就没有了，前半段太无聊，看的想睡觉",
+            "message_url": "https://t.me/bookshelf_in_storageroom/10324",
+            "reference_url": ""
+          },
+          {
+            "id": 10560,
+            "title": "金钱博弈",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 4,
+            "date": "2026-01-14",
+            "year": 2026,
+            "date_label": "2026.01.14",
+            "paragraphs": [
+              "看完了「金钱博弈」 故事看着没有实感，因为我离他们太远了 想要参与到这些事件中，强健的身体必不可少 书里经常写团队成员要在一整周的时间内，用极少的睡眠时间完成大量谈判和文本整理的工作"
+            ],
+            "excerpt": "看完了「金钱博弈」 故事看着没有实感，因为我离他们太远了 想要参与到这些事件中，强健的身体必不可少 书里经常写团队成员要在一整周的时间内，用极少的睡眠时间完成大量谈判和文本整理的工作",
+            "message_url": "https://t.me/bookshelf_in_storageroom/10560",
+            "reference_url": ""
+          },
+          {
+            "id": 10847,
+            "title": "超时空辉夜姬",
+            "medium": "番剧",
+            "status": "看完",
+            "max_paragraphs": 5,
+            "date": "2026-02-07",
+            "year": 2026,
+            "date_label": "2026.02.07",
+            "paragraphs": [
+              "看完了「超时空辉夜姬」🌙，超棒！❤️ 不论是画风还是剧情都是！ 推荐看看，剧情顺滑的像尿尿一样，虽然节奏快但是很舒服，没什么突兀的地方 看的就是一个快乐，非常推荐！💯",
+              "虚拟世界从「刀剑神域」到这部都是充满幻想的技术啊，何时能够实现呢？现在的技术连骗过眼睛都很难"
+            ],
+            "excerpt": "看完了「超时空辉夜姬」🌙，超棒！❤️ 不论是画风还是剧情都是！ 推荐看看，剧情顺滑的像尿尿一样，虽然节奏快但是很舒服，没什么突兀的地方 看的就是一个快乐，非常推荐！💯\n\n虚拟世界从「刀剑神域」到这部都是充满幻想的技术啊，何时能够实现呢？现在的技术连骗过眼睛都很难",
+            "message_url": "https://t.me/bookshelf_in_storageroom/10847",
+            "reference_url": ""
+          },
+          {
+            "id": 10898,
+            "title": "我想成为你的眼泪",
+            "medium": "书",
+            "status": "弃读",
+            "max_paragraphs": 3,
+            "date": "2026-02-12",
+            "year": 2026,
+            "date_label": "2026.02.12",
+            "paragraphs": [
+              "看了《我想成为你的眼泪》，看了一半然后直接跳到最后的一章了",
+              "剧情很老套，一般般吧，文字风格也很轻小说 人物形象也一般般（对我来说），这些写轻小说的是共用一套人物库么，关键词打乱组合一下就是新的主角"
+            ],
+            "excerpt": "看了《我想成为你的眼泪》，看了一半然后直接跳到最后的一章了\n\n剧情很老套，一般般吧，文字风格也很轻小说 人物形象也一般般（对我来说），这些写轻小说的是共用一套人物库么，关键词打乱组合一下就是新的主角",
+            "message_url": "https://t.me/bookshelf_in_storageroom/10898",
+            "reference_url": ""
+          },
+          {
+            "id": 10906,
+            "title": "关于代入感",
+            "medium": "阅读随记",
+            "status": "随记",
+            "featured": true,
+            "max_paragraphs": 4,
+            "date": "2026-02-13",
+            "year": 2026,
+            "date_label": "2026.02.13",
+            "paragraphs": [
+              "我读书的时候，会把自己带入书中的情景，每当主角作出我觉得很差的选择的时候，对这本书的厌恶就会多一分",
+              "可能这是有些书在我这里感觉一般般的原因",
+              "不过也不是所有的书都会让我有代入感，可能是得看作者构建书中世界的技术？当构建的足够好时，我就没法“亲身”进入了"
+            ],
+            "excerpt": "我读书的时候，会把自己带入书中的情景，每当主角作出我觉得很差的选择的时候，对这本书的厌恶就会多一分\n\n可能这是有些书在我这里感觉一般般的原因\n\n不过也不是所有的书都会让我有代入感，可能是得看作者构建书中世界的技术？当构建的足够好时，我就没法“亲身”进入了",
+            "message_url": "https://t.me/bookshelf_in_storageroom/10906",
+            "reference_url": ""
+          },
+          {
+            "id": 11007,
+            "title": "首尔破笑组",
+            "medium": "电视剧",
+            "status": "在看",
+            "max_paragraphs": 3,
+            "date": "2026-02-20",
+            "year": 2026,
+            "date_label": "2026.02.20",
+            "paragraphs": [
+              "在看「首尔破笑组」，韩剧 各个方面看起来都是很公式化的喜剧（几男一女的组合）",
+              "我发现好多电影/电视剧都可以在b站直接看了啊（如果不考虑画质的话"
+            ],
+            "excerpt": "在看「首尔破笑组」，韩剧 各个方面看起来都是很公式化的喜剧（几男一女的组合）\n\n我发现好多电影/电视剧都可以在b站直接看了啊（如果不考虑画质的话",
+            "message_url": "https://t.me/bookshelf_in_storageroom/11007",
+            "reference_url": ""
+          },
+          {
+            "id": 11016,
+            "title": "空心手帐",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 7,
+            "date": "2026-02-21",
+            "year": 2026,
+            "date_label": "2026.02.21",
+            "paragraphs": [
+              "读完了「空心手帐」，没多长，大概讲的是主角假装自己怀孕了，然后工作生活的故事 是按照时间（怀孕多少月）为顺序写的，最近看的书有几本都是直接把时间当作章节名 主要想写的大概就是怀孕很艰辛，怀孕应该是一个家庭的事情而不是孕妇一个人的事情 （我觉得当前的社会制度就不支持怀孕，这个社会上大部分人都在隐性的拒绝生育）",
+              "书中具体的情节有点看不明白，一边说自己是假装怀孕，用东西填充肚子和衣服之间的空隙 但是又说医生在超声检查下看到了孩子的形状，医生的水平这么垃圾的嘛 日本作家好像风格就是这样，写出来的东西不管读者怎么理解，为了一碟醋包了顿饺子",
+              "生育能给我带来什么呢？ 一份持续十几年的，几乎无法推卸的责任，太恐怖了 如果两扇门，一边是孤独，另一边是这份责任的话，我觉得我会选择孤独的那一边 而且我能给孩子带来什么呢？假如我财富自由那倒还好，像养宠物图一乐也不是不行，但是我现在离这个还差得远",
+              "结婚和生子这件事情对我来说还是太远了"
+            ],
+            "excerpt": "读完了「空心手帐」，没多长，大概讲的是主角假装自己怀孕了，然后工作生活的故事 是按照时间（怀孕多少月）为顺序写的，最近看的书有几本都是直接把时间当作章节名 主要想写的大概就是怀孕很艰辛，怀孕应该是一个家庭的事情而不是孕妇一个人的事情 （我觉得当前的社会制度就不支持怀孕，这个社会上大部分人都在隐性的拒绝生育）\n\n书中具体的情节有点看不明白，一边说自己是假装怀孕，用东西填充肚子和衣服之间的空隙 但是又说医生在超声检查下看到了孩子的形状，医生的水平这么垃圾的嘛 日本作家好像风格就是这样，写出来的东西不管读者怎么理解，为了一碟醋包了顿饺子\n\n生育能给我带来什么呢？ 一份持续十几年的，几乎无法推卸的责任，太恐怖了 如果两扇门，一边是孤独，另一边是这份责任的话，我觉得我会选择孤独的那一边 而且我能给孩子带来什么呢？假如我财富自由那倒还好，像养宠物图一乐也不是不行，但是我现在离这个还差得远\n\n结婚和生子这件事情对我来说还是太远了",
+            "message_url": "https://t.me/bookshelf_in_storageroom/11016",
+            "reference_url": ""
+          },
+          {
+            "id": 11057,
+            "title": "首尔破笑组",
+            "medium": "电视剧",
+            "status": "弃看",
+            "max_paragraphs": 2,
+            "date": "2026-02-24",
+            "year": 2026,
+            "date_label": "2026.02.24",
+            "paragraphs": ["不打算继续看「首尔破笑组」了，感觉一般般没啥意思"],
+            "excerpt": "不打算继续看「首尔破笑组」了，感觉一般般没啥意思",
+            "message_url": "https://t.me/bookshelf_in_storageroom/11057",
+            "reference_url": ""
+          },
+          {
+            "id": 11075,
+            "title": "胡若望的疑问",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 5,
+            "date": "2026-02-26",
+            "year": 2026,
+            "date_label": "2026.02.26",
+            "paragraphs": [
+              "看完了「胡若望的疑问」 大概讲了一个观念不同，性格固执的封建读书人（只能算是识字写字的程度），和一个想当然的西洋教会人员的游历经历 不过他大部分时间都被拘禁在一小块地方，因为他不遵守当地的规则，并且给人带来了麻烦",
+              "读完之后感觉语言非常重要，没有理解为什么两个人在出发前没有约定国外语言的学习 另外还有观念上的，在不熟悉的地方，见人说人话，见鬼说鬼话才能更快融入当地"
+            ],
+            "excerpt": "看完了「胡若望的疑问」 大概讲了一个观念不同，性格固执的封建读书人（只能算是识字写字的程度），和一个想当然的西洋教会人员的游历经历 不过他大部分时间都被拘禁在一小块地方，因为他不遵守当地的规则，并且给人带来了麻烦\n\n读完之后感觉语言非常重要，没有理解为什么两个人在出发前没有约定国外语言的学习 另外还有观念上的，在不熟悉的地方，见人说人话，见鬼说鬼话才能更快融入当地",
+            "message_url": "https://t.me/bookshelf_in_storageroom/11075",
+            "reference_url": ""
+          },
+          {
+            "id": 11108,
+            "title": "布达佩斯大饭店",
+            "medium": "电影",
+            "status": "看完",
+            "max_paragraphs": 5,
+            "date": "2026-03-01",
+            "year": 2026,
+            "date_label": "2026.03.01",
+            "paragraphs": [
+              "看完了「布达佩斯大饭店」 电影的画面和色彩很棒，剧情上我觉得没什么出彩的地方，但是能一直看下去 所以推荐看看",
+              "我感觉这应该是那些老旧的寓言/一千零一夜里发生的场景： 你进入到一个新的地方，遇到一个经历丰富的老人，然后听他讲故事 他的故事讲完，这个场景也就结束了"
+            ],
+            "excerpt": "看完了「布达佩斯大饭店」 电影的画面和色彩很棒，剧情上我觉得没什么出彩的地方，但是能一直看下去 所以推荐看看\n\n我感觉这应该是那些老旧的寓言/一千零一夜里发生的场景： 你进入到一个新的地方，遇到一个经历丰富的老人，然后听他讲故事 他的故事讲完，这个场景也就结束了",
+            "message_url": "https://t.me/bookshelf_in_storageroom/11108",
+            "reference_url": ""
+          },
+          {
+            "id": 11218,
+            "title": "负动产时代",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 6,
+            "date": "2026-03-10",
+            "year": 2026,
+            "date_label": "2026.03.10",
+            "paragraphs": [
+              "看完了「负动产时代」，讲的是日本人对土地/房屋的观念，从一种稳定的资产变成债务的转变 主要还是税务方面的原因，因为继承税/管理费等费用太高了，而且还是每年都在交 外加人口减少，也没那么新钱进入了，所以土地/房屋的价值越来越低",
+              "不过中国就不一样了，房产税永远在地平线上，土地所有权也很明确，所以有些问题不会出现",
+              "总的来说，随着老龄化加深，房产/土地是越来越不值钱的，只有一些核心地块相对保值",
+              "不适合读，这本书没啥新意"
+            ],
+            "excerpt": "看完了「负动产时代」，讲的是日本人对土地/房屋的观念，从一种稳定的资产变成债务的转变 主要还是税务方面的原因，因为继承税/管理费等费用太高了，而且还是每年都在交 外加人口减少，也没那么新钱进入了，所以土地/房屋的价值越来越低\n\n不过中国就不一样了，房产税永远在地平线上，土地所有权也很明确，所以有些问题不会出现\n\n总的来说，随着老龄化加深，房产/土地是越来越不值钱的，只有一些核心地块相对保值\n\n不适合读，这本书没啥新意",
+            "message_url": "https://t.me/bookshelf_in_storageroom/11218",
+            "reference_url": ""
+          },
+          {
+            "id": 11281,
+            "title": "走出戈壁",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 5,
+            "date": "2026-03-14",
+            "year": 2026,
+            "date_label": "2026.03.14",
+            "paragraphs": [
+              "走马观花看完了「走出戈壁」，单伟建的另一本书 书的内容是他经历的自文革以来的经历，我对这方面的内容不感兴趣 所以看了点就没兴趣了",
+              "未来还会有文革这类运动出现吗？我觉得是有可能的，毕竟前几年上海还出现了管控下的饥荒 那么面对这种事情，「管住嘴，卖开腿」是少有的正确答案，不要让自己陷入危险中而无退路"
+            ],
+            "excerpt": "走马观花看完了「走出戈壁」，单伟建的另一本书 书的内容是他经历的自文革以来的经历，我对这方面的内容不感兴趣 所以看了点就没兴趣了\n\n未来还会有文革这类运动出现吗？我觉得是有可能的，毕竟前几年上海还出现了管控下的饥荒 那么面对这种事情，「管住嘴，卖开腿」是少有的正确答案，不要让自己陷入危险中而无退路",
+            "message_url": "https://t.me/bookshelf_in_storageroom/11281",
+            "reference_url": ""
+          },
+          {
+            "id": 11319,
+            "title": "K-POP：猎魔女团",
+            "medium": "电影",
+            "status": "看完",
+            "max_paragraphs": 5,
+            "date": "2026-03-16",
+            "year": 2026,
+            "date_label": "2026.03.16",
+            "paragraphs": [
+              "看完了「kpop猎魔女团」 喜欢这种画风，以及音乐 整部电影的剧情怎么说呢，可以当成是几首歌曲的mv，中间加了一点点剧情连接起来 所以几乎可以忽略，不会让人有厌烦 （也是经典的剧情：起势——高潮——坠入深渊——回归——击败敌人）",
+              "可以看看，或者直接听歌也行"
+            ],
+            "excerpt": "看完了「kpop猎魔女团」 喜欢这种画风，以及音乐 整部电影的剧情怎么说呢，可以当成是几首歌曲的mv，中间加了一点点剧情连接起来 所以几乎可以忽略，不会让人有厌烦 （也是经典的剧情：起势——高潮——坠入深渊——回归——击败敌人）\n\n可以看看，或者直接听歌也行",
+            "message_url": "https://t.me/bookshelf_in_storageroom/11319",
+            "reference_url": ""
+          },
+          {
+            "id": 11749,
+            "title": "呼吸",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 3,
+            "date": "2026-04-20",
+            "year": 2026,
+            "date_label": "2026.04.20",
+            "paragraphs": [
+              "最近在看特德姜的科幻小说集「呼吸」，里面都是一些短篇，感觉质量不错",
+              "特别是“焦虑是自由引起的眩晕”这一篇，光看名字就感觉很有意思，里面的故事也挺符合ai agent时代的生活"
+            ],
+            "excerpt": "最近在看特德姜的科幻小说集「呼吸」，里面都是一些短篇，感觉质量不错\n\n特别是“焦虑是自由引起的眩晕”这一篇，光看名字就感觉很有意思，里面的故事也挺符合ai agent时代的生活",
+            "message_url": "https://t.me/bookshelf_in_storageroom/11749",
+            "reference_url": ""
+          },
+          {
+            "id": 11832,
+            "title": "一百公尺。",
+            "medium": "番剧",
+            "status": "看完",
+            "max_paragraphs": 5,
+            "date": "2026-04-27",
+            "year": 2026,
+            "date_label": "2026.04.27",
+            "paragraphs": [
+              "非常推荐大家看看「一百公尺。 」(100 Meters) 讲的是百米赛跑运动员的故事",
+              "这部剧不论是情节还是画面都非常棒，配乐也是恰到好处 跑步时的镜头切换特别有感觉，能让人体会到那种刺激感",
+              "主人公在人生不同阶段的性格刻画也特别精彩。少年时期的意气风发、青年时期的油腻感，以及再次成长之后所展现出的强大生命力，都被表现得非常清晰"
+            ],
+            "excerpt": "非常推荐大家看看「一百公尺。 」(100 Meters) 讲的是百米赛跑运动员的故事\n\n这部剧不论是情节还是画面都非常棒，配乐也是恰到好处 跑步时的镜头切换特别有感觉，能让人体会到那种刺激感\n\n主人公在人生不同阶段的性格刻画也特别精彩。少年时期的意气风发、青年时期的油腻感，以及再次成长之后所展现出的强大生命力，都被表现得非常清晰",
+            "message_url": "https://t.me/bookshelf_in_storageroom/11832",
+            "reference_url": "https://www.bilibili.com/video/BV1TkicBgEnz/"
+          },
+          {
+            "id": 12086,
+            "title": "美国精神病人",
+            "medium": "电影",
+            "status": "看完",
+            "featured": true,
+            "max_paragraphs": 7,
+            "date": "2026-05-12",
+            "year": 2026,
+            "date_label": "2026.05.12",
+            "paragraphs": [
+              "看完了「美国精神病人」",
+              "符合刻板的华尔街金融白男（或者香港金融男）的形象",
+              "主角整个人是活在一套符号系统里的，身份、职业、消费、外表、品味，这些东西是他存在的标识，离开这些符号，他就无法确定自己是谁 同样的，他对别人也是根据这些符号的组合来认识的，所以剧中有些人反复认错名字，但大家依然能若无其事继续聊下去，因为在这个系统里，重要的是你期望对方达成的功能，至于具体的肉体是谁不重要（rust的trait？）",
+              "现在不管刷视频还是看图文，几乎都在反复灌输同一种「正确生活」：自律、健身、控糖控碳、穿得体面、把自己收拾得很精致，但是这些都是消费，而不是创造 消费提供的是一套现成模板，你只要有钱/时间/执行力，谁都可以用上，这些都是量产的身份皮肤，没有不可替代性",
+              "另外一个人一旦开始出现明显的失控，或者反复碰到那种怎么靠自己的能力都处理不了的问题，应该需要想一想是不是环境本身就有问题，需要跳出这个环境才能变正常"
+            ],
+            "excerpt": "看完了「美国精神病人」\n\n符合刻板的华尔街金融白男（或者香港金融男）的形象\n\n主角整个人是活在一套符号系统里的，身份、职业、消费、外表、品味，这些东西是他存在的标识，离开这些符号，他就无法确定自己是谁 同样的，他对别人也是根据这些符号的组合来认识的，所以剧中有些人反复认错名字，但大家依然能若无其事继续聊下去，因为在这个系统里，重要的是你期望对方达成的功能，至于具体的肉体是谁不重要（rust的trait？）\n\n现在不管刷视频还是看图文，几乎都在反复灌输同一种「正确生活」：自律、健身、控糖控碳、穿得体面、把自己收拾得很精致，但是这些都是消费，而不是创造 消费提供的是一套现成模板，你只要有钱/时间/执行力，谁都可以用上，这些都是量产的身份皮肤，没有不可替代性\n\n另外一个人一旦开始出现明显的失控，或者反复碰到那种怎么靠自己的能力都处理不了的问题，应该需要想一想是不是环境本身就有问题，需要跳出这个环境才能变正常",
+            "message_url": "https://t.me/bookshelf_in_storageroom/12086",
+            "reference_url": "https://neodb.social/movie/776l5OdvvA4c8uVF1nKCDr"
+          },
+          {
+            "id": 12660,
+            "title": "在轮下",
+            "medium": "书",
+            "status": "读完",
+            "featured": true,
+            "max_paragraphs": 5,
+            "date": "2026-07-01",
+            "year": 2026,
+            "date_label": "2026.07.01",
+            "paragraphs": [
+              "今天在高铁上差不多看完了「在轮下」 又是一个把故事中的人名，以及富有时代气息的名称换成现代对应的词汇后，能无缝兼容的故事 故事感觉有部分分叉结束的很仓促，比如赫尔曼离开学校那里，我读到后面还在想真的就没有来信了么？或许汉斯也是这么想的，书中的那些形象都很经典，比如",
+              "抱有这种想法的人好贱，只能看到pvp的规则，而无法看到pve的可能性 还有那些老师和家长对于汉斯的爱好和学习之间的区别态度，明明是休息时间，但是要”弯道超车“，所以不能玩耍，看到这里拳头都握紧了",
+              "以这本书作为学生生涯结尾的话感觉还不错，我对学校这套体系的厌恶大于喜爱（如果有的话）"
+            ],
+            "excerpt": "今天在高铁上差不多看完了「在轮下」 又是一个把故事中的人名，以及富有时代气息的名称换成现代对应的词汇后，能无缝兼容的故事 故事感觉有部分分叉结束的很仓促，比如赫尔曼离开学校那里，我读到后面还在想真的就没有来信了么？或许汉斯也是这么想的，书中的那些形象都很经典，比如\n\n抱有这种想法的人好贱，只能看到pvp的规则，而无法看到pve的可能性 还有那些老师和家长对于汉斯的爱好和学习之间的区别态度，明明是休息时间，但是要”弯道超车“，所以不能玩耍，看到这里拳头都握紧了\n\n以这本书作为学生生涯结尾的话感觉还不错，我对学校这套体系的厌恶大于喜爱（如果有的话）",
+            "message_url": "https://t.me/bookshelf_in_storageroom/12660",
+            "reference_url": ""
+          },
+          {
+            "id": 12868,
+            "title": "悉达多",
+            "medium": "书",
+            "status": "读完",
+            "max_paragraphs": 3,
+            "date": "2026-07-18",
+            "year": 2026,
+            "date_label": "2026.07.18",
+            "paragraphs": [
+              "火车路上看完了「悉达多」 感觉挺棒的，推荐读读 悉达多所想的问题，或者说作者遇到的问题，我也碰到过，但是我还没有开悟，或许对我来说只有死亡能终结这个问题"
+            ],
+            "excerpt": "火车路上看完了「悉达多」 感觉挺棒的，推荐读读 悉达多所想的问题，或者说作者遇到的问题，我也碰到过，但是我还没有开悟，或许对我来说只有死亡能终结这个问题",
+            "message_url": "https://t.me/bookshelf_in_storageroom/12868",
+            "reference_url": ""
+          },
+          {
+            "id": 12971,
+            "title": "长日将尽",
+            "medium": "书",
+            "status": "在读",
+            "max_paragraphs": 2,
+            "date": "2026-07-27",
+            "year": 2026,
+            "date_label": "2026.07.27",
+            "paragraphs": [
+              "读「长日将尽」的时候，感叹作者和翻译的文学水平都太高了，好多形容词"
+            ],
+            "excerpt": "读「长日将尽」的时候，感叹作者和翻译的文学水平都太高了，好多形容词",
+            "message_url": "https://t.me/bookshelf_in_storageroom/12971",
+            "reference_url": ""
+          },
+          {
+            "id": 13122,
+            "title": "",
+            "medium": "书",
+            "status": "随记",
+            "max_paragraphs": 5,
+            "date": "2026-08-12",
+            "year": 2026,
+            "date_label": "2026.08.12",
+            "paragraphs": [
+              "虽然我也自认为社交活动上面有障碍 但是我一般不会直接说很难听的话，或是这种直接的拒绝，而是直接减少交流/接触的机会 我觉得，没有特别大的冲突的话，还是至少保留一个沟通的方式比较好 史蒂文斯的交流方式让我感觉有点虚伪（非人），可以说他确实做到了一直以来追求的管家的身份该做的事情，但是其他方面并不合格"
+            ],
+            "excerpt": "虽然我也自认为社交活动上面有障碍 但是我一般不会直接说很难听的话，或是这种直接的拒绝，而是直接减少交流/接触的机会 我觉得，没有特别大的冲突的话，还是至少保留一个沟通的方式比较好 史蒂文斯的交流方式让我感觉有点虚伪（非人），可以说他确实做到了一直以来追求的管家的身份该做的事情，但是其他方面并不合格 史蒂文斯所追求的尊严，其实是作为奴仆的尊严，不是身为主人的尊严，在他外出时，他会不自觉表现出自己也是“有点身份的人”，在他的眼中，身份等级的存在是不言而明的，但是他又觉得，相比于上一代管家，他们这代人更为开明，他的思想其实是被时代限制的",
+            "message_url": "https://t.me/bookshelf_in_storageroom/13122",
+            "reference_url": ""
+          }
+        ]
+      }
+    </script>
+    长日将尽
+    <script>
+      const report = JSON.parse(
+        document.getElementById("report-data").textContent,
+      );
+      const state = { medium: "全部", query: "", newestFirst: false };
+      const mediumOrder = [
+        "书",
+        "电影",
+        "番剧",
+        "电视剧",
+        "纪录片",
+        "阅读随记",
+      ];
+      const collator = new Intl.Collator("zh-CN");
+
+      const el = (tag, className, text) => {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined) node.textContent = text;
+        return node;
+      };
+
+      function shortQuote(entry, limit = 116) {
+        const text =
+          entry.paragraphs.find((p) => p.length > 28) || entry.excerpt;
+        return text.length > limit ? `${text.slice(0, limit).trim()}……` : text;
+      }
+
+      function renderHeader() {
+        document.getElementById("entry-count").textContent =
+          report.meta.selected_entries;
+        document.getElementById("date-range").textContent =
+          `${report.meta.date_from} — ${report.meta.date_to}`;
+        document.getElementById("method-copy").textContent = report.meta.method;
+
+        const facts = [
+          [
+            "记录范围",
+            `${report.meta.date_from.slice(0, 4)}—${report.meta.date_to.slice(0, 4)}`,
+          ],
+          ["标签原档", `${report.meta.source_tagged_messages} 条`],
+          ["进入正文", `${report.meta.selected_entries} 条`],
+          ["涉及作品", `${report.meta.works} 部`],
+          [
+            "媒介",
+            mediumOrder.filter((m) => report.counts.medium[m]).join(" / "),
+          ],
+        ];
+        const factsNode = document.getElementById("facts");
+        facts.forEach(([label, value]) => {
+          const row = el("div", "fact");
+          row.append(el("dt", "", label), el("dd", "", value));
+          factsNode.append(row);
+        });
+
+        const reel = document.getElementById("reel");
+        report.entries
+          .filter((entry) => entry.featured)
+          .slice(0, 9)
+          .forEach((entry, index) => {
+            const frame = el("article", "frame");
+            frame.style.setProperty("--order", index);
+            const quote = el("blockquote", "", shortQuote(entry));
+            const footer = el("footer");
+            footer.append(
+              el("span", "", `${entry.medium} · ${entry.title}`),
+              el("time", "", entry.date_label),
+            );
+            frame.append(quote, footer);
+            reel.append(frame);
+          });
+      }
+
+      function filteredEntries() {
+        const query = state.query.trim().toLocaleLowerCase("zh-CN");
+        return report.entries
+          .filter(
+            (entry) => state.medium === "全部" || entry.medium === state.medium,
+          )
+          .filter(
+            (entry) =>
+              !query ||
+              `${entry.title}\n${entry.excerpt}\n${entry.status}`
+                .toLocaleLowerCase("zh-CN")
+                .includes(query),
+          )
+          .sort((a, b) => {
+            const dateCompare = a.date.localeCompare(b.date) || a.id - b.id;
+            return state.newestFirst ? -dateCompare : dateCompare;
+          });
+      }
+
+      function noteNode(entry, order) {
+        const note = el("article", "note");
+        note.dataset.medium = entry.medium;
+        note.style.setProperty("--order", Math.min(order, 12));
+
+        const head = el("header", "note-head");
+        const titleBox = el("div");
+        titleBox.append(el("h3", "note-title", entry.title));
+        const meta = el("div", "note-meta");
+        meta.append(
+          el("time", "", entry.date_label),
+          el("span", "medium-label", entry.medium),
+          el("span", "status-label", entry.status),
+        );
+        titleBox.append(meta);
+        const link = el("a", "message-link", "原消息 ↗");
+        link.href = entry.message_url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        head.append(titleBox, link);
+
+        const reflectionWrap = el("div", "reflection-wrap");
+        const reflection = el("blockquote", "reflection", entry.excerpt);
+        reflectionWrap.append(reflection);
+        if (entry.excerpt.length > 430 || entry.paragraphs.length > 4) {
+          reflection.classList.add("is-collapsed");
+          const button = el("button", "expand-button", "展开完整摘录");
+          button.type = "button";
+          button.addEventListener("click", () => {
+            const collapsed = reflection.classList.toggle("is-collapsed");
+            button.textContent = collapsed ? "展开完整摘录" : "收起";
+          });
+          reflectionWrap.append(button);
+        }
+
+        note.append(head, reflectionWrap);
+        return note;
+      }
+
+      function renderTimeline() {
+        const entries = filteredEntries();
+        const timeline = document.getElementById("timeline");
+        timeline.replaceChildren();
+        document.getElementById("visible-count").textContent = entries.length;
+        document
+          .getElementById("empty")
+          .classList.toggle("is-visible", entries.length === 0);
+
+        const byYear = new Map();
+        entries.forEach((entry) => {
+          if (!byYear.has(entry.year)) byYear.set(entry.year, []);
+          byYear.get(entry.year).push(entry);
+        });
+
+        [...byYear.entries()].forEach(([year, items]) => {
+          const group = el("section", "year-group");
+          group.setAttribute("aria-labelledby", `year-${year}`);
+          const mark = el("h3", "year-mark", String(year));
+          mark.id = `year-${year}`;
+          const notes = el("div", "notes");
+          items.forEach((entry, index) => notes.append(noteNode(entry, index)));
+          group.append(mark, notes);
+          timeline.append(group);
+        });
+      }
+
+      document.getElementById("controls").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-medium]");
+        if (!button) return;
+        state.medium = button.dataset.medium;
+        document.querySelectorAll("[data-medium]").forEach((item) => {
+          item.setAttribute("aria-pressed", String(item === button));
+        });
+        renderTimeline();
+      });
+
+      document.getElementById("search").addEventListener("input", (event) => {
+        state.query = event.target.value;
+        renderTimeline();
+      });
+
+      document
+        .getElementById("sort-button")
+        .addEventListener("click", (event) => {
+          state.newestFirst = !state.newestFirst;
+          event.currentTarget.textContent = state.newestFirst
+            ? "切到从早到晚"
+            : "切到最新优先";
+          renderTimeline();
+        });
+
+      renderHeader();
+      renderTimeline();
+    </script>
+  </body>
+</html>
